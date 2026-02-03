@@ -1,10 +1,22 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta http-equiv="refresh" content="0; url=https://sites.google.com/view/big-infrastructures">
-    <link rel="canonical" href="https://sites.google.com/view/big-infrastructures">
+    <meta charset="utf-8">
+    <title>Big Infra</title>
+    <style>
+      html, body, iframe {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        border: 0;
+      }
+    </style>
   </head>
   <body>
-    <p>Redirecting…</p>
+    <iframe
+      src="https://sites.google.com/view/big-infrastructures"
+      allowfullscreen
+    ></iframe>
   </body>
 </html>
