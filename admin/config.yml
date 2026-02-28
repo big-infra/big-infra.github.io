@@ -19,21 +19,21 @@ collections:
 
       - label: Declarations
         name: declarations
-        file: content/declarations.md
+        file: declarations.md
         fields:
           - {label: Title, name: title, widget: string}
           - {label: Body, name: body, widget: markdown}
 
       - label: Services
         name: services
-        file: content/services.md
+        file: services.md
         fields:
           - {label: Title, name: title, widget: string}
           - {label: Body, name: body, widget: markdown}
 
       - label: Payments
         name: payments
-        file: content/payments.md
+        file: payments.md
         fields:
           - {label: Title, name: title, widget: string}
           - {label: Body, name: body, widget: markdown}
