@@ -1,0 +1,10 @@
+title: Big Infrastructures
+description: Infrastructure Valuation & Advisory
+baseurl: ""
+url: "https://biginfra.github.io"
+
+markdown: kramdown
+
+collections:
+  pages:
+    output: true
