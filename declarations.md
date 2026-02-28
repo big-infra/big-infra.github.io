@@ -39,13 +39,13 @@ Last Update: August 2022 </br>
 4. Any request of refund shall of advance or cancellation of service shall be accepted after payment of the expense incurred during the process of service depending on the stage of completion of the same
 
 # About Using Trademark Symbol
-As informed by the legal advisor, consultant and expert in IP Laws. There is no legal significance to the ™ Mark. It just indicates that there is an application filed for the Trademark. Also, there is no such statements found in the literature, we perused which states that one may stop using the ™ mark for any reason, specific and general which is in perview of law and logic. Also, it is understood that this right is independent of the outcome or result of the application. The approval or rejection of the trademark application is immaterial in this regard. Also, this symbol signifies that an application for the trademark has already filed. Hence, no one else can again apply for the same. </br>
+As informed by the legal advisor, consultant and expert in IP Laws. There is no legal significance to the ™ Mark. It just indicates that there is an application filed for the Trademark. Also, there is no such statements found in the literature, we perused which states that one may stop using the ™ mark for any reason, specific and general which is in perview of law and logic. Also, it is understood that this right is independent of the outcome or result of the application. The approval or rejection of the trademark application is immaterial in this regard. Also, this symbol signifies that an application for the trademark has already filed. Hence, no one else can again apply for the same.
 
-This also resolves for the scenario wherein, if the trademark is not registered for a party who initially applied and if the same is registered for another party who applied later, then a conflict would be created and the validity of the grounds on which the trademark was not registered initially would be challenged. Ideally, this should not happen, hence, the use of such symbol is necessary to avoid multiple applications of same trademark.  </br>
+This also resolves for the scenario wherein, if the trademark is not registered for a party who initially applied and if the same is registered for another party who applied later, then a conflict would be created and the validity of the grounds on which the trademark was not registered initially would be challenged. Ideally, this should not happen, hence, the use of such symbol is necessary to avoid multiple applications of same trademark.
 
-As there is no legal binding or obligation for the ™ mark, which we use. It is not illegal as we are eligible after having applied for the trademark.  </br>
+As there is no legal binding or obligation for the ™ mark, which we use. It is not illegal as we are eligible after having applied for the trademark.
 
-Everyone who is a part of and write on behalf of, the Big Infrastructures use the ™ symbol and represent the Application ID wherever it is reasonable.  </br>
+Everyone who is a part of and write on behalf of, the Big Infrastructures use the ™ symbol and represent the Application ID wherever it is reasonable.
 
 
 
