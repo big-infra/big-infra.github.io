@@ -1,19 +1,17 @@
 ---
 layout: default
-title: Home
+title: BIG INFRASTRUCTURES™ | Home
 ---
 
 # Big Infrastructures
 
-Infrastructure Valuation • Advisory • Consulting
-
-We provide professional valuation and infrastructure advisory services.
+Consultancy of Architecture, Civil Engineering, Project Management, Information Technology and Legal Services in Karad, India
 
 ---
 
 ## Our Services
 
-- Infrastructure Valuation
+- Property Valuation
 - Project Advisory
 - Financial Analysis
 - Technical Consulting
@@ -22,4 +20,4 @@ We provide professional valuation and infrastructure advisory services.
 
 ## Contact
 
-Email: info@big-infrastructures.in
+Email: biginfra.in@gmail.com
