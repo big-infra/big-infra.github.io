@@ -1,6 +1,5 @@
 backend:
-  name: github
-  repo: biginfra/biginfra.github.io
+  name: git-gateway
   branch: main
 
 media_folder: "assets/images"
@@ -11,30 +10,30 @@ collections:
     label: "Pages"
     files:
 
-      - label: "Home"
-        name: "home"
-        file: "index.md"
+      - label: Home
+        name: home
+        file: index.md
         fields:
           - {label: Title, name: title, widget: string}
           - {label: Body, name: body, widget: markdown}
 
-      - label: "About"
-        name: "about"
-        file: "about.md"
+      - label: About
+        name: about
+        file: about.md
         fields:
           - {label: Title, name: title, widget: string}
           - {label: Body, name: body, widget: markdown}
 
-      - label: "Services"
-        name: "services"
-        file: "services.md"
+      - label: Services
+        name: services
+        file: services.md
         fields:
           - {label: Title, name: title, widget: string}
           - {label: Body, name: body, widget: markdown}
 
-      - label: "Contact"
-        name: "contact"
-        file: "contact.md"
+      - label: Contact
+        name: contact
+        file: contact.md
         fields:
           - {label: Title, name: title, widget: string}
           - {label: Body, name: body, widget: markdown}
