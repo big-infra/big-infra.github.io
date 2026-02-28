@@ -7,33 +7,33 @@ public_folder: "/assets/images"
 
 collections:
   - name: "pages"
-    label: "Pages"
+    label: "Main Pages"
     files:
 
       - label: Home
         name: home
-        file: index.md
+        file: content/home.md
         fields:
           - {label: Title, name: title, widget: string}
           - {label: Body, name: body, widget: markdown}
 
       - label: Declarations
         name: declarations
-        file: declarations.md
+        file: content/declarations.md
         fields:
           - {label: Title, name: title, widget: string}
           - {label: Body, name: body, widget: markdown}
 
       - label: Services
         name: services
-        file: services.md
+        file: content/services.md
         fields:
           - {label: Title, name: title, widget: string}
           - {label: Body, name: body, widget: markdown}
 
       - label: Payments
         name: payments
-        file: payments.md
+        file: content/payments.md
         fields:
           - {label: Title, name: title, widget: string}
           - {label: Body, name: body, widget: markdown}
