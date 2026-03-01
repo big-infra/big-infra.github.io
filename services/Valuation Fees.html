@@ -1,1 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valuation Fee and Payments</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            letter-spacing: 0.5px;
+        }
+
+        article {
+            background-color: #f8f9fa;
+            border: none;
+            padding: 40px;
+            border-radius: 15px;
+            margin: 0 auto;
+            max-width: 900px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .main-box {
+            margin: 30px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .inner-box {
+            background-color: white;
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: 0 5px 25px rgba(102, 126, 234, 0.2);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        section {
+            margin: 30px 0;
+        }
+
+        section h2 {
+            color: #667eea;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        section h3 {
+            color: #667eea;
+            font-size: 1.3em;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        p {
+            line-height: 1.8;
+            color: #555;
+            margin: 12px 0;
+            font-size: 1em;
+        }
+
+        fieldset {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            background-color: #fafbfc;
+        }
+
+        legend {
+            padding: 0 10px;
+            color: #667eea;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        #Asset_Value {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            margin: 12px 0;
+        }
+
+        #Asset_Value:focus {
+            outline: none;
+            border: 2px solid #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            background-color: #f5f7ff;
+        }
+
+        #Asset_Value::placeholder {
+            color: #999;
+        }
+
+        button {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            outline: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            margin-top: 12px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
+        }
+
+        .Asset-Value,
+        .bill-rule,
+        .bill-applied,
+        .discountV,
+        .discountP {
+            padding: 12px 15px;
+            margin: 10px 0;
+            background-color: #f0f4ff;
+            border-left: 4px solid #667eea;
+            border-radius: 6px;
+            font-size: 1em;
+            line-height: 1.6;
+            color: #333;
+            min-height: 30px;
+            display: none;
+        }
+
+        .Asset-Value:not(:empty),
+        .bill-rule:not(:empty),
+        .bill-applied:not(:empty),
+        .discountV:not(:empty),
+        .discountP:not(:empty) {
+            display: block;
+        }
+
+        .Asset-Value strong,
+        .bill-rule strong,
+        .bill-applied strong,
+        .discountV strong,
+        .discountP strong {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        ol {
+            margin-left: 25px;
+            line-height: 2;
+            color: #555;
+        }
+
+        ol li {
+            margin-bottom: 8px;
+        }
+
+        a button {
+            display: inline-block;
+            width: auto;
+            padding: 12px 30px;
+            margin: 20px auto;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        div[style*="text-align: center"] {
+            margin: 25px 0;
+        }
+
+        br {
+            content: "";
+        }
+
+        .copyright {
+            margin-top: 40px;
+            padding-top: 25px;
+            border-top: 2px solid #e0e0e0;
+            text-align: center;
+            color: #888;
+            font-size: 0.9em;
+        }
+
+        .copyright p {
+            margin: 6px 0;
+            color: #888;
+            font-size: 0.9em;
+        }
+
+        .copyright strong {
+            color: #667eea;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>Asset Valuation Fee Details</h1>
+    </header>
+    <article>
+        <section>
+            <h2>Professional Fees Calculator for Real Estate Valuation Service</h2>
+            <p>This calculator accepts the value of the asset for which the professional fees will be charged. As the result, it gives the charges according to the rule mentioned below, and our charges according to the market competition. It also shows the discount value and percentage.</p>
+        </section>
+
+
+
+        <div class="main-box">
+            <div class="inner-box">
+                <fieldset>
+                    <legend>Provide Details</legend>
+                    <form class="form" id="Valuation_Bill">
+                        <input type="number" placeholder="Enter Asset Value..." name="" id="Asset_Value">
+                        <button type="submit">Calculate Fee</button>
+                    </form>
+                </fieldset>
+
+                <div id="results">
+                    <p class="Asset-Value"></p>
+                    <p class="bill-rule"></p>
+                    <p class="bill-applied"></p>
+                    <p class="discountV"></p>
+                    <p class="discountP"></p>
+                </div>
+            </div>
+        </div>
+
+        <section>
+            <h3>Standard Guidelines for Billing of Multiple Assets</h3>
+            <p>When 1+ properties of similar nature are considered for valuation, the values of these properties are clubbed to compute the fees and discount in the Professional Fee. The above-mentioned references provide details of which properties should be considered under this criteria for Bill as per the rule. According to which, properties of similar nature are considered as one for the billing purpose, while we consider the discount on the applied bill.</p>
+
+            <h3><u>Reference of Rules regarding the Professional Fees</u></h3>
+            <ol>
+                <li>WEALTH-TAX (FIRST AMENDMENT) RULES, 2009 Substitution of Rule 8C</li>
+                <li>HANDBOOK ON POLICY, STANDARDS AND PROCEDURES FOR REAL ESTATE VALUATION BY BANKS AND HOUSING FINANCING SOCIETIES IN INDIA (Clause 1.2d, 1.6)</li>
+                <li>Market Competition</li>
+            </ol>
+
+            <div style="text-align: center;">
+                <a href="https://drive.google.com/file/d/1lJrlPfbGOOBq4-RGDIX2joOdL-DgaqXP/view?usp=share_link"><button>Detailed Explanation</button></a>
+            </div>
+
+            <p>This article gives the detailed explanation of the Rules stated above and the chart of the professional fees that we charge according to the above-mentioned rule.</p>
+        </section>
+
+        <div class="copyright">
+            <p>&copy; 2026 <strong>Mr. Yash Lohana</strong>. All rights reserved.</p>
+            <p>This code and calculator are licensed for use with proper acknowledgment of ownership.</p>
+        </div>
+    </article>
+
+    <script>
+        const input1 = document.querySelector('#Asset_Value')
+
+        function calcBillAsPerRule(x) {
+            let billAsPerRule = 0
+
+            if (x > 0 & x <= 500000) {
+                billAsPerRule = (0.5 * x) / 100
+
+
+            }
+            if (billAsPerRule < 1500) {
+                billAsPerRule = 1500
+            }
+            if (x > 500000 & x <= 1500000) {
+                billAsPerRule = 0.5 * 500000 / 100 + ((x - 500000) * 0.2) / 100
+
+            }
+            if (x > 1500000 & x <= 5500000) {
+                billAsPerRule = (0.5 * 500000) / 100 + (0.2 * 1000000) / 100 + (0.1 * (x - 1500000)) / 100
+
+            }
+            if (x > 5500000) {
+                billAsPerRule = (0.5 * 500000) / 100 + (0.2 * 1000000) / 100 + (0.1 * 4000000) / 100 + ((x - 5500000) * 0.05) / 100
+
+            }
+            return billAsPerRule
+        }
+
+        function calcBillApplied(x) {
+            let billApplied = 0
+            if (x <= 2000) {
+                billApplied = 1500
+            }
+            if (x > 2000 & x <= 2500) {
+                billApplied = 2000
+            }
+            if (x > 2500 & x <= 4500) {
+                billApplied = 2500
+            }
+            if (x > 4500 & x <= 6500) {
+                billApplied = 3000
+            }
+            if (x > 6500 & x <= 8500) {
+                billApplied = 3500
+            }
+            if (x > 8500 & x <= 9500) {
+                billApplied = 4000
+            }
+            if (x > 9500 & x <= 10750) {
+                billApplied = 5000
+            }
+            if (x > 10750 & x <= 13250) {
+                billApplied = 5500
+            }
+            if (x > 13250 & x <= 15750) {
+                billApplied = 6000
+            }
+            if (x > 15750 & x <= 18250) {
+                billApplied = 6500
+            }
+            if (x > 18250 & x <= 20750) {
+                billApplied = 7000
+            }
+            if (x > 20750 & x <= 23250) {
+                billApplied = 7500
+            }
+            if (x > 23250 & x <= 25750) {
+                billApplied = 8000
+            }
+            if (x > 25750 & x <= 28250) {
+                billApplied = 8500
+            }
+            if (x > 28250 & x <= 30750) {
+                billApplied = 9000
+            }
+            if (x > 30750 & x <= 35750) {
+                billApplied = 10000
+            }
+            if (x > 35750 & x <= 40750) {
+                billApplied = 10500
+            }
+            if (x > 40750 & x <= 45750) {
+                billApplied = 11000
+            }
+            if (x > 45750 & x <= 50750) {
+                billApplied = 11500
+            }
+            if (x > 50750 & x <= 55750) {
+                billApplied = 12000
+            }
+            if (x > 55750 & x <= 60750) {
+                billApplied = 12500
+            }
+            if (x > 60750 & x <= 65750) {
+                billApplied = 13000
+            }
+            if (x > 65750 & x <= 70750) {
+                billApplied = 13500
+            }
+            if (x > 70750 & x <= 75750) {
+                billApplied = 14000
+            }
+            if (x > 75750 & x <= 80750) {
+                billApplied = 14500
+            }
+            if (x > 80750 & x <= 85750) {
+                billApplied = 15000
+            }
+            if (x > 85750) {
+                billApplied = "Amount to be discussed in Person";
+            }
+            return billApplied
+
+
+        }
+
+
+
+        document.getElementById("Valuation_Bill").addEventListener("submit", (event) => {
+            event.preventDefault()
+
+            const Asset_Value = parseFloat(input1.value)
+
+            if (Asset_Value) {
+                const bill_as_per_rule = calcBillAsPerRule(Asset_Value)
+                const bill_applied = calcBillApplied(bill_as_per_rule)
+
+                const discountV = bill_as_per_rule - bill_applied
+                const discountP = ((bill_as_per_rule - bill_applied) / bill_as_per_rule) * 100
+
+                document.querySelector(".Asset-Value").innerHTML = `<strong>Value of Property:</strong> ${Asset_Value} INR`
+                document.querySelector(".bill-rule").innerHTML = `<strong>Bill as per rule:</strong> ${bill_as_per_rule} INR`
+                document.querySelector(".bill-applied").innerHTML = `<strong>Bill applied:</strong> ${bill_applied} INR`
+                document.querySelector(".discountV").innerHTML = `<strong>Discount Value:</strong> ${discountV.toFixed(2)} INR`
+                document.querySelector(".discountP").innerHTML = `<strong>Percentage Discount:</strong> ${discountP.toFixed(2)}%`
+            }
+            document.getElementById("Valuation_Bill").reset()
+        })
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+    </script>
+</body>
+
+</html>
