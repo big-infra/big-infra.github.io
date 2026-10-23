@@ -46,6 +46,8 @@ Tools
 
 [**Tangential Tacheometry Calculator**](https://big-infra.github.io/services/tangential-tacheometry-calculator.html)
 
+[**Resection Calculator - Three Point Problem**](https://big-infra.github.io/services/resection-calculator-tpp.html)
+
 ## Project Management
 
 
