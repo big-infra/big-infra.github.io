@@ -28,7 +28,7 @@ Senior Legal Consultant and Service Provider | Notary Govt. of India
 - Mr. Sanket Nayak (Developer)
 - Mr. Omkar Mali (Contractor)
 
-**Nivara Construction & Sahyadri Developers**<br/>
+**Advisors**<br/>
 - Mr. Pandurang Yadav (Director, Mahila Merchant, Karad)<br/>
 - Mr. Lalasaheb Jagtap (Consultant)<br/>
 - Mr. Laxman Shinde (Developer)<br/>
@@ -38,11 +38,8 @@ Senior Legal Consultant and Service Provider | Notary Govt. of India
 
 ## Corporate Social Responsibility
 **Present**<br/>
-Providing our E-Commerce Infrastructure to Karad City Chess Association (KCCA)<br/>
+Providing our E-Commerce & OfficeInfrastructure to Karad City Chess Association (KCCA)<br/>
 <br/>
-**Past**<br/>
-Providing our E-Commerce Infrastructure to a Chess Club of Indian institute of Technology, Madras (IITM) for an event in 2022.
-Access restricted only for Students of IITM
 
 ## Our Services
 
