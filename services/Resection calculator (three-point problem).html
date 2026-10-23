@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Resection calculator (three-point problem)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EDF0EA;--surface:#FAFBF8;--ink:#17262E;--muted:#5B6B73;--line:#C9D1CA;
+  --accent:#D63A14;--on-accent:#fff;--sight:#17627B;--field:#fff;
+  color-scheme:light;
+  --head:"Barlow Semi Condensed","Arial Narrow",system-ui,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){--bg:#11191D;--surface:#192329;--ink:#E7EEEA;--muted:#93A4AB;--line:#2E3C43;--accent:#FF6A42;--on-accent:#1a0d08;--sight:#5CC3DE;--field:#0f171b;color-scheme:dark}
+}
+:root[data-theme="dark"]{--bg:#11191D;--surface:#192329;--ink:#E7EEEA;--muted:#93A4AB;--line:#2E3C43;--accent:#FF6A42;--on-accent:#1a0d08;--sight:#5CC3DE;--field:#0f171b;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 var(--body)}
+main{max-width:980px;margin:0 auto;padding:20px 16px 48px}
+h1{font:700 clamp(28px,6vw,40px)/1.05 var(--head);margin:8px 0 6px;letter-spacing:.2px}
+.lede{margin:0 0 20px;color:var(--muted);max-width:62ch}
+.grid{display:grid;gap:16px}
+@media(min-width:800px){.grid{grid-template-columns:minmax(0,5fr) minmax(0,6fr);align-items:start}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px}
+.card h2{font:600 20px/1.2 var(--head);margin:0 0 12px}
+label{display:block;font-size:14px;color:var(--muted);margin:0 0 4px}
+.f{margin-bottom:12px}
+fieldset{border:1px solid var(--line);border-radius:8px;margin:0 0 12px;padding:10px 10px 2px}
+legend{font:600 16px var(--head);padding:0 6px}
+input,select{width:100%;font:500 17px var(--body);color:var(--ink);background:var(--field);border:1px solid var(--line);border-radius:7px;padding:9px 10px;min-height:44px}
+input:focus-visible,select:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.row{display:grid;gap:10px}
+.r3{grid-template-columns:repeat(3,1fr)}
+.pt{display:grid;grid-template-columns:28px 1fr 1fr;gap:10px;align-items:end;margin-bottom:10px}
+.pt b{font:700 22px/44px var(--head)}
+.hint{font-size:13px;color:var(--muted);margin:4px 0 8px}
+svg{width:100%;height:auto;display:block;background:var(--field);border:1px solid var(--line);border-radius:8px}
+svg text{font:600 14px var(--head);fill:var(--ink)}
+.sight{stroke:var(--sight);stroke-width:2.5;fill:none}
+.tri{stroke:var(--muted);stroke-width:1.5;stroke-dasharray:5 4;fill:none}
+.kp{fill:var(--accent)}
+.st{fill:var(--ink)}
+.out{margin:14px 0 0;padding:0;list-style:none}
+.out li{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:9px 0;border-top:1px solid var(--line)}
+.out li:first-child{border-top:0}
+.out span{color:var(--muted);font-size:14px}
+.out b{font:700 24px/1 var(--head);font-variant-numeric:tabular-nums;white-space:nowrap}
+.out .main b{font-size:30px}
+.out small{font:500 14px var(--body);color:var(--muted)}
+.warn{color:var(--accent)!important;font-weight:500}
+.status{margin:14px 0 0;color:var(--muted);font-size:14px}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.btn{font:600 15px var(--body);min-height:44px;padding:0 16px;border-radius:8px;border:1px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer}
+.btn.p{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn:disabled{opacity:.45;cursor:default}
+.tw{overflow-x:auto;margin-top:12px}
+table{border-collapse:collapse;width:100%;min-width:520px;font-variant-numeric:tabular-nums;font-size:14px}
+th,td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+th{font-weight:500;color:var(--muted)}
+details{margin-top:16px;font-size:14px;color:var(--muted)}
+summary{cursor:pointer;font-weight:500;min-height:32px}
+details code{font:500 14px ui-monospace,Menlo,Consolas,monospace;color:var(--ink)}
+.copyright{margin-top:24px;padding-top:12px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+.copyright p{margin:4px 0}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main>
+  <h1>Resection calculator</h1>
+  <p class="lede">Three-point problem of plane table surveying. Occupy an unknown station P, sight three known points A, B and C, and enter the two angles between the rays. The calculator solves the position of P and gives the bearings you need to orient the table.</p>
+
+  <div class="grid">
+    <section class="card" aria-labelledby="in-h">
+      <h2 id="in-h">Observation</h2>
+
+      <fieldset>
+        <legend>Known points (any consistent unit)</legend>
+        <div class="pt"><b>A</b><div><label for="ae">Easting</label><input id="ae" type="number" inputmode="decimal" step="any"></div><div><label for="an">Northing</label><input id="an" type="number" inputmode="decimal" step="any"></div></div>
+        <div class="pt"><b>B</b><div><label for="be">Easting</label><input id="be" type="number" inputmode="decimal" step="any"></div><div><label for="bn">Northing</label><input id="bn" type="number" inputmode="decimal" step="any"></div></div>
+        <div class="pt"><b>C</b><div><label for="ce">Easting</label><input id="ce" type="number" inputmode="decimal" step="any"></div><div><label for="cn">Northing</label><input id="cn" type="number" inputmode="decimal" step="any"></div></div>
+      </fieldset>
+
+      <div class="f">
+        <label for="ord">Seen from P, the rays to A, B, C turn</label>
+        <select id="ord"><option value="cw">Clockwise</option><option value="ccw">Anticlockwise</option></select>
+      </div>
+
+      <fieldset>
+        <legend>Angle APB at P</legend>
+        <div class="row r3 f">
+          <div><label for="ad">Degrees</label><input id="ad" type="number" inputmode="decimal" step="any" min="0" placeholder="0"></div>
+          <div><label for="am">Minutes</label><input id="am" type="number" inputmode="decimal" step="any" min="0" max="59.999" placeholder="0"></div>
+          <div><label for="as">Seconds</label><input id="as" type="number" inputmode="decimal" step="any" min="0" max="59.999" placeholder="0"></div>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Angle BPC at P</legend>
+        <div class="row r3 f">
+          <div><label for="bd">Degrees</label><input id="bd" type="number" inputmode="decimal" step="any" min="0" placeholder="0"></div>
+          <div><label for="bm">Minutes</label><input id="bm" type="number" inputmode="decimal" step="any" min="0" max="59.999" placeholder="0"></div>
+          <div><label for="bs">Seconds</label><input id="bs" type="number" inputmode="decimal" step="any" min="0" max="59.999" placeholder="0"></div>
+        </div>
+      </fieldset>
+      <p class="hint">Measure each angle between two rays drawn on the sheet, in the direction the rays turn. The points can be in any position around P, inside or outside the triangle ABC.</p>
+    </section>
+
+    <section class="card" aria-labelledby="out-h">
+      <h2 id="out-h">Result</h2>
+      <svg id="dia" viewBox="0 0 340 240" role="img" aria-label="Plan of the known points and the solved station"></svg>
+      <p class="status" id="status" role="status"></p>
+      <ul class="out" id="out"></ul>
+      <div class="btns">
+        <button class="btn p" id="add" type="button" disabled>Add to log</button>
+        <button class="btn" id="reset" type="button">Clear inputs</button>
+      </div>
+    </section>
+  </div>
+
+  <section class="card" style="margin-top:16px" aria-labelledby="log-h">
+    <h2 id="log-h">Field log</h2>
+    <p class="hint" id="logempty">Stations you add appear here. Copy them as CSV to paste into a spreadsheet.</p>
+    <div class="tw" id="tw" hidden>
+      <table><thead><tr><th>Station</th><th>Easting</th><th>Northing</th><th>PA</th><th>PB</th><th>PC</th></tr></thead><tbody id="rows"></tbody></table>
+    </div>
+    <div class="btns">
+      <button class="btn" id="copy" type="button" disabled>Copy as CSV</button>
+      <button class="btn" id="clr" type="button" disabled>Clear log</button>
+    </div>
+    <p class="hint" id="copied" role="status"></p>
+  </section>
+
+  <details>
+    <summary>Method used</summary>
+    <p>The point P sees chord AB under the angle φ1 and chord BC under φ2, so P lies on two circles that both pass through B. Each circle’s centre sits on the perpendicular bisector of its chord, at a distance (chord ÷ 2)·cot φ from the chord’s midpoint, on the side where P lies.</p>
+    <p><code>P = reflection of B in the line joining the two centres</code></p>
+    <p>Bearings from P are measured clockwise from grid north. When P lies on the circle through A, B and C (the “danger circle”), the two circles coincide and the position cannot be fixed. Near that circle the result is weak, and the calculator warns you.</p>
+    <p>This page covers the three-point problem only, not the two-point problem.</p>
+  </details>
+  <footer class="copyright">
+    <p>&copy; 2026 Mr. Yash Lohana. All rights reserved.</p>
+    <p>This code is licensed for use with proper acknowledgment of ownership.</p>
+  </footer>
+</main>
+
+<script>
+(function(){
+var $=function(i){return document.getElementById(i)};
+var log=[], cur=null, RAD=Math.PI/180;
+
+function num(id){var v=$(id).value.trim();return v===''?NaN:parseFloat(v)}
+function fmt(x,d){return (Math.abs(x)<5e-10?0:x).toFixed(d===undefined?3:d)}
+function dms(a){
+  a=((a%360)+360)%360;
+  var d=Math.floor(a), m=Math.floor((a-d)*60), s=Math.round(((a-d)*60-m)*60);
+  if(s===60){s=0;m++} if(m===60){m=0;d++} if(d===360)d=0;
+  return d+'° '+m+'′ '+s+'″';
+}
+function ang(p,name){
+  var d=num(p+'d'),m=num(p+'m'),s=num(p+'s');
+  if(isNaN(d)&&isNaN(m)&&isNaN(s)) return {empty:true};
+  d=isNaN(d)?0:d; m=isNaN(m)?0:m; s=isNaN(s)?0:s;
+  if(d<0||m<0||s<0) return {err:'Angle values cannot be negative.'};
+  if(m>=60||s>=60) return {err:'Minutes and seconds must be less than 60.'};
+  var a=d+m/60+s/3600;
+  if(a<=0||a>=180) return {err:'Angle '+name+' must be between 0° and 180°.'};
+  return {v:a};
+}
+function pt(k){var e=num(k+'e'),n=num(k+'n');return (isNaN(e)||isNaN(n))?null:{e:e,n:n}}
+
+function center(P1,P2,phi,sg){
+  var dx=P2.e-P1.e, dy=P2.n-P1.n, c=Math.hypot(dx,dy);
+  var off=(c/2)/Math.tan(phi);
+  return {e:(P1.e+P2.e)/2+off*sg*dy/c, n:(P1.n+P2.n)/2-off*sg*dx/c};
+}
+function az(from,to){return (Math.atan2(to.e-from.e,to.n-from.n)/RAD+360)%360}
+
+function calc(){
+  cur=null;
+  var A=pt('a'),B=pt('b'),C=pt('c');
+  var f1=ang('a','APB'), f2=ang('b','BPC');
+  if(f1.err) return show(f1.err,A,B,C);
+  if(f2.err) return show(f2.err,A,B,C);
+  if(!A||!B||!C) return show('Enter the easting and northing of A, B and C.',A,B,C);
+  if(f1.empty||f2.empty) return show('Enter the angles APB and BPC.',A,B,C);
+  var tol=1e-9;
+  if(Math.hypot(A.e-B.e,A.n-B.n)<tol||Math.hypot(B.e-C.e,B.n-C.n)<tol) return show('Points A, B and C must be at different positions.',A,B,C);
+  var cross=(B.e-A.e)*(C.n-A.n)-(B.n-A.n)*(C.e-A.e);
+  if(Math.abs(cross)<1e-9) return show('A, B and C lie on one line, so the position cannot be fixed.',A,B,C);
+  if(f1.v+f2.v>=360) return show('The two angles together must be less than 360°.',A,B,C);
+
+  var sg=$('ord').value==='cw'?1:-1;
+  var O1=center(A,B,f1.v*RAD,sg), O2=center(B,C,f2.v*RAD,sg);
+  var ux=O2.e-O1.e, uy=O2.n-O1.n, ul=Math.hypot(ux,uy);
+  var scale=Math.max(Math.hypot(A.e-B.e,A.n-B.n),Math.hypot(B.e-C.e,B.n-C.n));
+  if(ul<1e-9*scale) return show('P falls on the circle through A, B and C (the danger circle), so no unique position exists. Choose another station.',A,B,C);
+  ux/=ul; uy/=ul;
+  var wx=B.e-O1.e, wy=B.n-O1.n, t=wx*ux+wy*uy;
+  var P={e:2*(O1.e+t*ux)-B.e, n:2*(O1.n+t*uy)-B.n};
+
+  var d=2*(A.e*(B.n-C.n)+B.e*(C.n-A.n)+C.e*(A.n-B.n));
+  var a2=A.e*A.e+A.n*A.n,b2=B.e*B.e+B.n*B.n,c2=C.e*C.e+C.n*C.n;
+  var Oc={e:(a2*(B.n-C.n)+b2*(C.n-A.n)+c2*(A.n-B.n))/d, n:(a2*(C.e-B.e)+b2*(A.e-C.e)+c2*(B.e-A.e))/d};
+  var R=Math.hypot(A.e-Oc.e,A.n-Oc.n), gap=Math.abs(Math.hypot(P.e-Oc.e,P.n-Oc.n)-R)/R;
+
+  var dist=function(X){return Math.hypot(X.e-P.e,X.n-P.n)};
+  cur={P:P,A:A,B:B,C:C,dA:dist(A),dB:dist(B),dC:dist(C),zA:az(P,A),zB:az(P,B),zC:az(P,C),third:360-f1.v-f2.v,gap:gap};
+  render(cur);
+}
+
+function show(msg,A,B,C){
+  $('status').textContent=msg; $('out').innerHTML=''; $('add').disabled=true;
+  draw(A,B,C,null);
+}
+function row(label,val,unit,cls){
+  return '<li'+(cls?' class="'+cls+'"':'')+'><span>'+label+'</span><b>'+val+(unit?' <small>'+unit+'</small>':'')+'</b></li>';
+}
+function render(r){
+  $('status').textContent='';
+  var h='';
+  h+=row('Easting of P',fmt(r.P.e),'','main');
+  h+=row('Northing of P',fmt(r.P.n),'','main');
+  h+=row('Distance PA',fmt(r.dA),'');
+  h+=row('Distance PB',fmt(r.dB),'');
+  h+=row('Distance PC',fmt(r.dC),'');
+  h+=row('Bearing P to A',dms(r.zA),'');
+  h+=row('Bearing P to B',dms(r.zB),'');
+  h+=row('Bearing P to C',dms(r.zC),'');
+  h+=row('Remaining angle CPA',dms(r.third),'');
+  if(r.gap<0.05) h+='<li><span class="warn">P is close to the danger circle through A, B and C. The position is weak, so choose a different station or a different set of points.</span></li>';
+  $('out').innerHTML=h; $('add').disabled=false;
+  draw(r.A,r.B,r.C,r.P);
+}
+
+function draw(A,B,C,P){
+  var pts=[A,B,C,P].filter(Boolean), p=[];
+  if(!pts.length){$('dia').innerHTML='';return}
+  var minE=Math.min.apply(0,pts.map(function(q){return q.e})), maxE=Math.max.apply(0,pts.map(function(q){return q.e}));
+  var minN=Math.min.apply(0,pts.map(function(q){return q.n})), maxN=Math.max.apply(0,pts.map(function(q){return q.n}));
+  var rE=Math.max(maxE-minE,1e-6), rN=Math.max(maxN-minN,1e-6);
+  var k=Math.min(270/rE,180/rN); if(pts.length===1)k=1;
+  var ox=(340-rE*k)/2, oy=(240+rN*k)/2;
+  var X=function(q){return ox+(q.e-minE)*k}, Y=function(q){return oy-(q.n-minN)*k};
+  if(A&&B&&C) p.push('<path class="tri" d="M'+X(A)+' '+Y(A)+' L'+X(B)+' '+Y(B)+' L'+X(C)+' '+Y(C)+' Z"/>');
+  if(P) [A,B,C].forEach(function(q){p.push('<line class="sight" x1="'+X(P)+'" y1="'+Y(P)+'" x2="'+X(q)+'" y2="'+Y(q)+'"/>')});
+  [['A',A],['B',B],['C',C]].forEach(function(a){
+    if(!a[1])return;
+    p.push('<circle class="kp" cx="'+X(a[1])+'" cy="'+Y(a[1])+'" r="5"/><text x="'+(X(a[1])+8)+'" y="'+(Y(a[1])-7)+'">'+a[0]+'</text>');
+  });
+  if(P) p.push('<circle class="st" cx="'+X(P)+'" cy="'+Y(P)+'" r="5"/><text x="'+(X(P)+8)+'" y="'+(Y(P)+16)+'">P</text>');
+  p.push('<text x="14" y="22">N ↑</text>');
+  $('dia').innerHTML=p.join('');
+}
+
+function addLog(){
+  if(!cur) return;
+  log.push({s:'P'+(log.length+1),e:cur.P.e,n:cur.P.n,a:cur.dA,b:cur.dB,c:cur.dC});
+  drawLog();
+}
+function drawLog(){
+  var has=log.length>0;
+  $('tw').hidden=!has; $('logempty').hidden=has; $('copy').disabled=!has; $('clr').disabled=!has;
+  $('rows').innerHTML=log.map(function(e){
+    return '<tr><td>'+e.s+'</td><td>'+fmt(e.e)+'</td><td>'+fmt(e.n)+'</td><td>'+fmt(e.a)+'</td><td>'+fmt(e.b)+'</td><td>'+fmt(e.c)+'</td></tr>';
+  }).join('');
+}
+function copyCsv(){
+  var csv='Station,Easting,Northing,PA,PB,PC\n'+log.map(function(e){
+    return [e.s,fmt(e.e),fmt(e.n),fmt(e.a),fmt(e.b),fmt(e.c)].join(',');
+  }).join('\n');
+  var done=function(ok){$('copied').textContent=ok?'Copied to the clipboard.':'Copy failed. Select the table and copy it by hand.'};
+  try{
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(csv).then(function(){done(true)},function(){done(false)});return}
+  }catch(e){}
+  try{
+    var ta=document.createElement('textarea');ta.value=csv;document.body.appendChild(ta);ta.select();
+    var ok=document.execCommand('copy');document.body.removeChild(ta);done(ok);
+  }catch(e){done(false)}
+}
+
+['ae','an','be','bn','ce','cn','ord','ad','am','as','bd','bm','bs'].forEach(function(id){
+  $(id).addEventListener('input',calc); $(id).addEventListener('change',calc);
+});
+$('add').onclick=addLog;
+$('copy').onclick=copyCsv;
+$('clr').onclick=function(){log=[];$('copied').textContent='';drawLog()};
+$('reset').onclick=function(){
+  ['ad','am','as','bd','bm','bs'].forEach(function(id){$(id).value=''});
+  calc();
+};
+drawLog(); calc();
+})();
+</script>
+</body>
+</html>
