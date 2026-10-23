@@ -24,6 +24,9 @@
 *{box-sizing:border-box}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 var(--body)}
+.service-nav{max-width:980px;margin:16px auto 0;padding:10px 12px;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;background:rgba(23,38,46,.06);border:1px solid var(--line);border-radius:10px}
+.service-nav a{color:var(--ink);text-decoration:none;font:600 14px var(--body);padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.35)}
+.service-nav a:hover{background:rgba(255,255,255,.65)}
 main{max-width:980px;margin:0 auto;padding:20px 16px 48px}
 h1{font:700 clamp(28px,6vw,40px)/1.05 var(--head);margin:8px 0 6px;letter-spacing:.2px}
 .lede{margin:0 0 20px;color:var(--muted);max-width:60ch}
@@ -78,9 +81,15 @@ th{font-weight:500;color:var(--muted)}
 </style>
 </head>
 <body>
+<div class="service-nav">
+  <a href="/">Home</a>
+  <a href="/services/">Services</a>
+  <a href="/payments/">Payments</a>
+  <a href="/declarations">Declarations</a>
+</div>
 <main>
   <h1>Inclined Stadia Calculator</h1>
-  <p class="lede">Staff held vertical, line of sight inclined. Enter the vertical angle with either the hair readings or the inclined distance, and get the horizontal distance, vertical component and levels.</p>
+  <p class="lede">Staff held vertical, line of sight inclined. Enter the vertical angle with either the hair readings or the inclined distance, and get the horizontal distance, vertical component, and reduced levels.</p>
 
   <div class="grid">
     <section class="card" aria-labelledby="in-h">

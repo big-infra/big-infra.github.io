@@ -19,6 +19,34 @@
             line-height: 1.4;
         }
 
+        .service-nav {
+            max-width: 700px;
+            margin: 0 auto 12px auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            padding: 10px 12px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.16);
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(255, 255, 255, 0.28);
+        }
+
+        .service-nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.92em;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .service-nav a:hover {
+            background: rgba(255, 255, 255, 0.22);
+        }
+
         .container {
             max-width: 700px;
             margin: 0 auto;
@@ -284,6 +312,12 @@
     </script>
 </head>
 <body>
+    <div class="service-nav">
+        <a href="/">Home</a>
+        <a href="/services/">Services</a>
+        <a href="/payments/">Payments</a>
+        <a href="/declarations">Declarations</a>
+    </div>
     <div class="container">
         <h1>GPS Distance, Angle, and Area Calculator</h1>
         <div class="instructions">

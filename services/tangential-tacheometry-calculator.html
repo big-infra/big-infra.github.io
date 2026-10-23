@@ -24,6 +24,9 @@
 *{box-sizing:border-box}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 var(--body)}
+.service-nav{max-width:980px;margin:16px auto 0;padding:10px 12px;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;background:rgba(23,38,46,.06);border:1px solid var(--line);border-radius:10px}
+.service-nav a{color:var(--ink);text-decoration:none;font:600 14px var(--body);padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.35)}
+.service-nav a:hover{background:rgba(255,255,255,.65)}
 main{max-width:980px;margin:0 auto;padding:20px 16px 48px}
 h1{font:700 clamp(28px,6vw,40px)/1.05 var(--head);margin:8px 0 6px;letter-spacing:.2px}
 .lede{margin:0 0 20px;color:var(--muted);max-width:60ch}
@@ -79,6 +82,12 @@ th{font-weight:500;color:var(--muted)}
 </style>
 </head>
 <body>
+<div class="service-nav">
+  <a href="/">Home</a>
+  <a href="/services/">Services</a>
+  <a href="/payments/">Payments</a>
+  <a href="/declarations">Declarations</a>
+</div>
 <main>
   <h1>Tangential Tacheometry Calculator</h1>
   <p class="lede">Two vertical angles to two vanes on a vertical staff. Enter both angles and the vane readings or their separation, and get the horizontal distance, vertical components and levels.</p>
@@ -161,7 +170,7 @@ th{font-weight:500;color:var(--muted)}
 
   <details class="f2">
     <summary>Formulas used</summary>
-    <p>Angles are signed: elevation is positive, depression is negative, and a zenith angle z becomes 90° − z. θu is the angle to the upper vane and θl the angle to the lower vane, with the staff vertical and the vanes a distance s apart.</p>
+    <p>Angles are signed: elevation is positive, depression is negative, and a zenith angle z becomes 90° − z. θu is the angle to the upper vane and θl the angle to the lower vane, with the same sign convention.</p>
     <p><code>D = s / (tanθu − tanθl)</code> (horizontal distance)<br>
     <code>Vl = D·tanθl</code> and <code>Vu = D·tanθu</code> (vertical components to each vane)<br>
     <code>RL of staff point = station RL + HI + Vl − hl</code>, where hl is the staff reading at the lower vane.</p>
