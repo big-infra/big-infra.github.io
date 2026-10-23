@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Inclined stadia calculator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EDF0EA;--surface:#FAFBF8;--ink:#17262E;--muted:#5B6B73;--line:#C9D1CA;
+  --accent:#D63A14;--on-accent:#fff;--sight:#17627B;--field:#fff;
+  color-scheme:light;
+  --head:"Barlow Semi Condensed","Arial Narrow",system-ui,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){--bg:#11191D;--surface:#192329;--ink:#E7EEEA;--muted:#93A4AB;--line:#2E3C43;--accent:#FF6A42;--on-accent:#1a0d08;--sight:#5CC3DE;--field:#0f171b;color-scheme:dark}
+}
+:root[data-theme="dark"]{--bg:#11191D;--surface:#192329;--ink:#E7EEEA;--muted:#93A4AB;--line:#2E3C43;--accent:#FF6A42;--on-accent:#1a0d08;--sight:#5CC3DE;--field:#0f171b;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 var(--body)}
+main{max-width:980px;margin:0 auto;padding:20px 16px 48px}
+h1{font:700 clamp(28px,6vw,40px)/1.05 var(--head);margin:8px 0 6px;letter-spacing:.2px}
+.lede{margin:0 0 20px;color:var(--muted);max-width:60ch}
+.grid{display:grid;gap:16px}
+@media(min-width:800px){.grid{grid-template-columns:minmax(0,5fr) minmax(0,6fr);align-items:start}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px}
+.card h2{font:600 20px/1.2 var(--head);margin:0 0 12px}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-bottom:14px}
+.seg button{font:500 15px var(--body);padding:10px 8px;border:0;background:transparent;color:var(--ink);cursor:pointer;min-height:44px}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+label{display:block;font-size:14px;color:var(--muted);margin:0 0 4px}
+.f{margin-bottom:12px}
+input,select{width:100%;font:500 17px var(--body);color:var(--ink);background:var(--field);border:1px solid var(--line);border-radius:7px;padding:9px 10px;min-height:44px}
+input:focus-visible,select:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.row{display:grid;gap:10px}
+.r3{grid-template-columns:repeat(3,1fr)}
+.r2{grid-template-columns:1fr 1fr}
+details{margin:6px 0 12px;border-top:1px solid var(--line);padding-top:10px}
+summary{cursor:pointer;font-weight:500;min-height:32px}
+details .row{margin-top:10px}
+.hint{font-size:13px;color:var(--muted);margin:4px 0 0}
+svg{width:100%;height:auto;display:block;background:var(--field);border:1px solid var(--line);border-radius:8px}
+svg text{font:600 13px var(--head);fill:var(--ink)}
+.sight{stroke:var(--sight);stroke-width:3;fill:none}
+.hz{stroke:var(--muted);stroke-width:1.5;stroke-dasharray:5 4;fill:none}
+.vt{stroke:var(--accent);stroke-width:2.5;fill:none}
+.staff{stroke:var(--ink);stroke-width:6;fill:none}
+.arc{stroke:var(--sight);stroke-width:1.5;fill:none}
+.inst{fill:var(--ink)}
+.out{margin:14px 0 0;padding:0;list-style:none}
+.out li{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:9px 0;border-top:1px solid var(--line)}
+.out li:first-child{border-top:0}
+.out span{color:var(--muted);font-size:14px}
+.out b{font:700 24px/1 var(--head);font-variant-numeric:tabular-nums;white-space:nowrap}
+.out .main b{font-size:30px}
+.out small{font:500 14px var(--body);color:var(--muted)}
+.status{margin:14px 0 0;color:var(--muted);font-size:14px}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.btn{font:600 15px var(--body);min-height:44px;padding:0 16px;border-radius:8px;border:1px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer}
+.btn.p{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn:disabled{opacity:.45;cursor:default}
+.tw{overflow-x:auto;margin-top:12px}
+table{border-collapse:collapse;width:100%;min-width:480px;font-variant-numeric:tabular-nums;font-size:14px}
+th,td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+th{font-weight:500;color:var(--muted)}
+.f2{margin-top:16px;font-size:14px;color:var(--muted)}
+.f2 code{font:500 14px ui-monospace,Menlo,Consolas,monospace;color:var(--ink)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main>
+  <h1>Inclined stadia calculator</h1>
+  <p class="lede">Staff held vertical, line of sight inclined. Enter the vertical angle with either the hair readings or the inclined distance, and get the horizontal distance, vertical component and levels.</p>
+
+  <div class="grid">
+    <section class="card" aria-labelledby="in-h">
+      <h2 id="in-h">Observation</h2>
+      <div class="seg" role="group" aria-label="Input method">
+        <button type="button" id="m1" aria-pressed="true">Hair readings</button>
+        <button type="button" id="m2" aria-pressed="false">Inclined distance</button>
+      </div>
+
+      <div class="f">
+        <label for="atype">Vertical angle is a</label>
+        <select id="atype">
+          <option value="el">Angle of elevation</option>
+          <option value="de">Angle of depression</option>
+          <option value="ze">Zenith angle</option>
+        </select>
+      </div>
+      <div class="row r3 f">
+        <div><label for="deg">Degrees</label><input id="deg" type="number" inputmode="decimal" step="any" min="0" placeholder="0"></div>
+        <div><label for="min">Minutes</label><input id="min" type="number" inputmode="decimal" step="any" min="0" max="59.999" placeholder="0"></div>
+        <div><label for="sec">Seconds</label><input id="sec" type="number" inputmode="decimal" step="any" min="0" max="59.999" placeholder="0"></div>
+      </div>
+
+      <div id="p1">
+        <div class="row r2 f">
+          <div><label for="top">Top hair reading (m)</label><input id="top" type="number" inputmode="decimal" step="any"></div>
+          <div><label for="bot">Bottom hair reading (m)</label><input id="bot" type="number" inputmode="decimal" step="any"></div>
+        </div>
+      </div>
+      <div id="p2" hidden>
+        <div class="f"><label for="dist">Inclined distance along line of sight (m)</label><input id="dist" type="number" inputmode="decimal" step="any" min="0"></div>
+      </div>
+      <div class="f">
+        <label for="mid" id="midl">Axial (middle) reading (m), optional</label>
+        <input id="mid" type="number" inputmode="decimal" step="any">
+        <p class="hint" id="midh">If left blank, the mean of the top and bottom readings is used.</p>
+      </div>
+
+      <details>
+        <summary>Levels (optional)</summary>
+        <div class="row r2">
+          <div><label for="rl">Station RL (m)</label><input id="rl" type="number" inputmode="decimal" step="any"></div>
+          <div><label for="hi">Height of instrument (m)</label><input id="hi" type="number" inputmode="decimal" step="any" min="0"></div>
+        </div>
+      </details>
+      <details>
+        <summary>Instrument constants</summary>
+        <div class="row r2">
+          <div><label for="k">Multiplying constant, k</label><input id="k" type="number" inputmode="decimal" step="any" value="100"></div>
+          <div><label for="c">Additive constant, C (m)</label><input id="c" type="number" inputmode="decimal" step="any" value="0"></div>
+        </div>
+      </details>
+    </section>
+
+    <section class="card" aria-labelledby="out-h">
+      <h2 id="out-h">Result</h2>
+      <svg id="dia" viewBox="0 0 340 240" role="img" aria-label="Diagram of the inclined sight"></svg>
+      <p class="status" id="status" role="status"></p>
+      <ul class="out" id="out"></ul>
+      <div class="btns">
+        <button class="btn p" id="add" type="button" disabled>Add to log</button>
+        <button class="btn" id="reset" type="button">Clear inputs</button>
+      </div>
+    </section>
+  </div>
+
+  <section class="card" style="margin-top:16px" aria-labelledby="log-h">
+    <h2 id="log-h">Field log</h2>
+    <p class="hint" id="logempty">Readings you add appear here. Copy them as CSV to paste into a spreadsheet.</p>
+    <div class="tw" id="tw" hidden>
+      <table><thead><tr><th>Point</th><th>Angle</th><th>H (m)</th><th>V (m)</th><th>L (m)</th><th>RL (m)</th></tr></thead><tbody id="rows"></tbody></table>
+    </div>
+    <div class="btns">
+      <button class="btn" id="copy" type="button" disabled>Copy as CSV</button>
+      <button class="btn" id="clr" type="button" disabled>Clear log</button>
+    </div>
+    <p class="hint" id="copied" role="status"></p>
+  </section>
+
+  <details class="f2">
+    <summary>Formulas used</summary>
+    <p>With staff vertical, vertical angle θ, staff intercept s, constants k and C:</p>
+    <p><code>L = k·s·cosθ + C</code> (inclined distance)<br>
+    <code>H = k·s·cos²θ + C·cosθ</code> (horizontal distance)<br>
+    <code>V = k·s·sinθ·cosθ + C·sinθ</code> (vertical component, negative for depression)<br>
+    <code>RL of staff point = station RL + HI + V − h</code>, where h is the axial reading.</p>
+    <p>When you enter the inclined distance directly, H = L·cosθ and V = L·sinθ. A zenith angle z is converted with θ = 90° − z.</p>
+  </details>
+</main>
+
+<script>
+(function(){
+var $=function(i){return document.getElementById(i)};
+var mode=1, log=[], cur=null;
+
+function num(id){var v=$(id).value.trim();return v===''?NaN:parseFloat(v)}
+function fmt(x,d){return (Math.abs(x)<5e-10?0:x).toFixed(d===undefined?3:d)}
+function dms(a){
+  var s=a<0?'−':'', v=Math.abs(a), d=Math.floor(v), m=Math.floor((v-d)*60), sec=Math.round(((v-d)*60-m)*60);
+  if(sec===60){sec=0;m++} if(m===60){m=0;d++}
+  return s+d+'° '+m+'′ '+sec+'″';
+}
+
+function setMode(n){
+  mode=n;
+  $('m1').setAttribute('aria-pressed',n===1);
+  $('m2').setAttribute('aria-pressed',n===2);
+  $('p1').hidden=n!==1; $('p2').hidden=n!==2;
+  if(n===1){
+    $('midl').textContent='Axial (middle) reading (m), optional';
+    $('midh').textContent='If left blank, the mean of the top and bottom readings is used.';
+  }else{
+    $('midl').textContent='Target height h (m), optional';
+    $('midh').textContent='The staff reading you sighted. Needed only for the RL of the staff point.';
+  }
+  calc();
+}
+
+function angle(){
+  var d=num('deg'),m=num('min'),s=num('sec');
+  d=isNaN(d)?0:d; m=isNaN(m)?0:m; s=isNaN(s)?0:s;
+  if(d<0||m<0||s<0) return {err:'Angle values cannot be negative. Pick elevation or depression instead.'};
+  if(m>=60||s>=60) return {err:'Minutes and seconds must be less than 60.'};
+  var a=d+m/60+s/3600, t=$('atype').value;
+  if(t==='ze'){ if(a>180) return {err:'A zenith angle cannot exceed 180°.'}; return {th:90-a,a:a}; }
+  if(a>=90) return {err:'The angle must be less than 90°.'};
+  return {th:t==='de'?-a:a,a:a};
+}
+
+function calc(){
+  cur=null;
+  var A=angle();
+  if(A.err){return show(A.err)}
+  var th=A.th*Math.PI/180, co=Math.cos(th), si=Math.sin(th);
+  if(Math.abs(co)<1e-9) return show('A vertical sight cannot be reduced with this method.');
+  var k=num('k'), C=num('c'); if(isNaN(C))C=0;
+  if(isNaN(k)||k<=0) return show('Enter a multiplying constant greater than zero.');
+  var L,H,V,s,h=num('mid');
+  if(mode===1){
+    var t=num('top'), b=num('bot');
+    if(isNaN(t)||isNaN(b)) return show('Enter the top and bottom hair readings.',th);
+    s=t-b;
+    if(!(s>0)) return show('The top hair reading must be larger than the bottom reading.',th);
+    if(isNaN(h)) h=(t+b)/2;
+    L=k*s*co+C; H=k*s*co*co+C*co; V=k*s*si*co+C*si;
+  }else{
+    L=num('dist');
+    if(isNaN(L)||L<=0) return show('Enter the inclined distance.',th);
+    H=L*co; V=L*si; s=(L-C)/(k*co);
+  }
+  var hi=num('hi'), rl=num('rl'), dh=null, R=null;
+  if(!isNaN(hi)&&!isNaN(h)){dh=hi+V-h; if(!isNaN(rl)) R=rl+dh;}
+  cur={a:A.th,H:H,V:V,L:L,s:s,dh:dh,R:R};
+  render(cur,th);
+}
+
+function show(msg,th){
+  $('status').textContent=msg; $('out').innerHTML=''; $('add').disabled=true;
+  draw(th===undefined?0:th); 
+  if(th===undefined){var A=angle(); if(!A.err) draw(A.th*Math.PI/180)}
+}
+
+function row(label,val,unit,cls){
+  return '<li'+(cls?' class="'+cls+'"':'')+'><span>'+label+'</span><b>'+val+(unit?' <small>'+unit+'</small>':'')+'</b></li>';
+}
+
+function render(r,th){
+  $('status').textContent='';
+  var g=Math.abs(r.V)<1e-9?'level':'1 in '+fmt(Math.abs(r.H/r.V),1)+(r.V>0?' rise':' fall');
+  var h='';
+  h+=row('Horizontal distance, H',fmt(r.H),'m','main');
+  h+=row('Vertical component, V',(r.V>0?'+':'')+fmt(r.V),'m','main');
+  h+=row('Inclined distance, L',fmt(r.L),'m');
+  h+=row(mode===1?'Staff intercept, s':'Implied staff intercept, s',fmt(r.s),'m');
+  h+=row('Slope',fmt(Math.abs(r.V/r.H)*100,2),'% ('+g+')');
+  h+=row('Vertical angle, θ',dms(r.a),'');
+  if(r.dh!==null) h+=row('Height difference, station to staff point',(r.dh>0?'+':'')+fmt(r.dh),'m');
+  if(r.R!==null) h+=row('RL of staff point',fmt(r.R),'m','main');
+  else if(r.dh===null) h+='<li><span>Add the height of instrument and the axial reading to see levels.</span></li>';
+  else h+='<li><span>Add the station RL under “Levels” to see the RL of the staff point.</span></li>';
+  $('out').innerHTML=h; $('add').disabled=false;
+  draw(th);
+}
+
+function draw(th){
+  var t=Math.max(-1,Math.min(1,th)), Lv=220, x0=34, y0=120+Lv*Math.sin(t)/2;
+  var x1=x0+Lv*Math.cos(t), y1=y0-Lv*Math.sin(t), sg=t>=0?1:-1, p=[];
+  p.push('<line class="hz" x1="'+x0+'" y1="'+y0+'" x2="'+x1+'" y2="'+y0+'"/>');
+  if(Math.abs(y1-y0)>1) p.push('<line class="vt" x1="'+x1+'" y1="'+y0+'" x2="'+x1+'" y2="'+y1+'"/>');
+  p.push('<line class="sight" x1="'+x0+'" y1="'+y0+'" x2="'+x1+'" y2="'+y1+'"/>');
+  p.push('<line class="staff" x1="'+x1+'" y1="'+(y1-22)+'" x2="'+x1+'" y2="'+(y1+22)+'"/>');
+  p.push('<circle class="inst" cx="'+x0+'" cy="'+y0+'" r="5"/>');
+  p.push('<path class="inst" d="M'+x0+' '+y0+' l-9 16 M'+x0+' '+y0+' l9 16" stroke="currentColor" style="stroke:var(--ink);stroke-width:2"/>');
+  if(Math.abs(t)>0.03){
+    var r=42, ax=x0+r*Math.cos(t), ay=y0-r*Math.sin(t);
+    p.push('<path class="arc" d="M'+(x0+r)+' '+y0+' A'+r+' '+r+' 0 0 '+(t>0?0:1)+' '+ax+' '+ay+'"/>');
+    p.push('<text x="'+(x0+r+6)+'" y="'+(y0+(t>0?-6:15))+'">θ</text>');
+  }
+  p.push('<text x="'+((x0+x1)/2)+'" y="'+(y0+(t>=0?18:-8))+'" text-anchor="middle">H</text>');
+  if(Math.abs(y1-y0)>16) p.push('<text x="'+(x1-9)+'" y="'+((y0+y1)/2+4)+'" text-anchor="end">V</text>');
+  p.push('<text x="'+((x0+x1)/2+12*sg*-Math.sin(t))+'" y="'+((y0+y1)/2+12*sg*-Math.cos(t)+4)+'" text-anchor="middle">L</text>');
+  $('dia').innerHTML=p.join('');
+}
+
+function addLog(){
+  if(!cur) return;
+  var n=log.length+1;
+  log.push({p:'P'+n,a:cur.a,H:cur.H,V:cur.V,L:cur.L,R:cur.R});
+  drawLog();
+}
+function drawLog(){
+  var has=log.length>0;
+  $('tw').hidden=!has; $('logempty').hidden=has; $('copy').disabled=!has; $('clr').disabled=!has;
+  $('rows').innerHTML=log.map(function(e){
+    return '<tr><td>'+e.p+'</td><td>'+dms(e.a)+'</td><td>'+fmt(e.H)+'</td><td>'+fmt(e.V)+'</td><td>'+fmt(e.L)+'</td><td>'+(e.R===null?'–':fmt(e.R))+'</td></tr>';
+  }).join('');
+}
+function copyCsv(){
+  var csv='Point,Angle (deg),H (m),V (m),L (m),RL (m)\n'+log.map(function(e){
+    return [e.p,fmt(e.a,5),fmt(e.H),fmt(e.V),fmt(e.L),e.R===null?'':fmt(e.R)].join(',');
+  }).join('\n');
+  var done=function(ok){$('copied').textContent=ok?'Copied to the clipboard.':'Copy failed. Select the table and copy it by hand.'};
+  try{
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(csv).then(function(){done(true)},function(){done(false)});return}
+  }catch(e){}
+  try{
+    var ta=document.createElement('textarea');ta.value=csv;document.body.appendChild(ta);ta.select();
+    var ok=document.execCommand('copy');document.body.removeChild(ta);done(ok);
+  }catch(e){done(false)}
+}
+
+['deg','min','sec','atype','top','bot','dist','mid','hi','rl','k','c'].forEach(function(id){
+  $(id).addEventListener('input',calc); $(id).addEventListener('change',calc);
+});
+$('m1').onclick=function(){setMode(1)};
+$('m2').onclick=function(){setMode(2)};
+$('add').onclick=addLog;
+$('copy').onclick=copyCsv;
+$('clr').onclick=function(){log=[];$('copied').textContent='';drawLog()};
+$('reset').onclick=function(){
+  ['deg','min','sec','top','bot','dist','mid'].forEach(function(id){$(id).value=''});
+  calc();
+};
+drawLog(); setMode(1);
+})();
+</script>
+</body>
+</html>
