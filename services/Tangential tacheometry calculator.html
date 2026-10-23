@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tangential Tacheometry Calculator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EDF0EA;--surface:#FAFBF8;--ink:#17262E;--muted:#5B6B73;--line:#C9D1CA;
+  --accent:#D63A14;--on-accent:#fff;--sight:#17627B;--field:#fff;
+  color-scheme:light;
+  --head:"Barlow Semi Condensed","Arial Narrow",system-ui,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){--bg:#11191D;--surface:#192329;--ink:#E7EEEA;--muted:#93A4AB;--line:#2E3C43;--accent:#FF6A42;--on-accent:#1a0d08;--sight:#5CC3DE;--field:#0f171b;color-scheme:dark}
+}
+:root[data-theme="dark"]{--bg:#11191D;--surface:#192329;--ink:#E7EEEA;--muted:#93A4AB;--line:#2E3C43;--accent:#FF6A42;--on-accent:#1a0d08;--sight:#5CC3DE;--field:#0f171b;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 var(--body)}
+main{max-width:980px;margin:0 auto;padding:20px 16px 48px}
+h1{font:700 clamp(28px,6vw,40px)/1.05 var(--head);margin:8px 0 6px;letter-spacing:.2px}
+.lede{margin:0 0 20px;color:var(--muted);max-width:60ch}
+.grid{display:grid;gap:16px}
+@media(min-width:800px){.grid{grid-template-columns:minmax(0,5fr) minmax(0,6fr);align-items:start}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px}
+.card h2{font:600 20px/1.2 var(--head);margin:0 0 12px}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-bottom:14px}
+.seg button{font:500 15px var(--body);padding:10px 8px;border:0;background:transparent;color:var(--ink);cursor:pointer;min-height:44px}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+label{display:block;font-size:14px;color:var(--muted);margin:0 0 4px}
+.f{margin-bottom:12px}
+fieldset{border:1px solid var(--line);border-radius:8px;margin:0 0 12px;padding:10px 10px 2px}
+legend{font:600 16px var(--head);padding:0 6px}
+input,select{width:100%;font:500 17px var(--body);color:var(--ink);background:var(--field);border:1px solid var(--line);border-radius:7px;padding:9px 10px;min-height:44px}
+input:focus-visible,select:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.row{display:grid;gap:10px}
+.r3{grid-template-columns:repeat(3,1fr)}
+.r2{grid-template-columns:1fr 1fr}
+details{margin:6px 0 12px;border-top:1px solid var(--line);padding-top:10px}
+summary{cursor:pointer;font-weight:500;min-height:32px}
+details .row{margin-top:10px}
+.hint{font-size:13px;color:var(--muted);margin:4px 0 0}
+svg{width:100%;height:auto;display:block;background:var(--field);border:1px solid var(--line);border-radius:8px}
+svg text{font:600 13px var(--head);fill:var(--ink)}
+.sight{stroke:var(--sight);stroke-width:3;fill:none}
+.hz{stroke:var(--muted);stroke-width:1.5;stroke-dasharray:5 4;fill:none}
+.staff{stroke:var(--ink);stroke-width:6;fill:none}
+.vane{stroke:var(--accent);stroke-width:4;fill:none}
+.inst{fill:var(--ink)}
+.out{margin:14px 0 0;padding:0;list-style:none}
+.out li{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:9px 0;border-top:1px solid var(--line)}
+.out li:first-child{border-top:0}
+.out span{color:var(--muted);font-size:14px}
+.out b{font:700 24px/1 var(--head);font-variant-numeric:tabular-nums;white-space:nowrap}
+.out .main b{font-size:30px}
+.out small{font:500 14px var(--body);color:var(--muted)}
+.status{margin:14px 0 0;color:var(--muted);font-size:14px}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.btn{font:600 15px var(--body);min-height:44px;padding:0 16px;border-radius:8px;border:1px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer}
+.btn.p{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn:disabled{opacity:.45;cursor:default}
+.tw{overflow-x:auto;margin-top:12px}
+table{border-collapse:collapse;width:100%;min-width:520px;font-variant-numeric:tabular-nums;font-size:14px}
+th,td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+th{font-weight:500;color:var(--muted)}
+.f2{margin-top:16px;font-size:14px;color:var(--muted)}
+.f2 code{font:500 14px ui-monospace,Menlo,Consolas,monospace;color:var(--ink)}
+.copyright{margin-top:24px;padding-top:12px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+.copyright p{margin:4px 0}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main>
+  <h1>Tangential Tacheometry Calculator</h1>
+  <p class="lede">Two vertical angles to two vanes on a vertical staff. Enter both angles and the vane readings or their separation, and get the horizontal distance, vertical components and levels.</p>
+
+  <div class="grid">
+    <section class="card" aria-labelledby="in-h">
+      <h2 id="in-h">Observation</h2>
+      <div class="seg" role="group" aria-label="Staff input method">
+        <button type="button" id="m1" aria-pressed="true">Vane readings</button>
+        <button type="button" id="m2" aria-pressed="false">Vane separation</button>
+      </div>
+
+      <fieldset>
+        <legend>Upper vane</legend>
+        <div class="f">
+          <label for="ut">Angle is a</label>
+          <select id="ut"><option value="el">Angle of elevation</option><option value="de">Angle of depression</option><option value="ze">Zenith angle</option></select>
+        </div>
+        <div class="row r3 f">
+          <div><label for="ud">Degrees</label><input id="ud" type="number" inputmode="decimal" step="any" min="0" placeholder="0"></div>
+          <div><label for="um">Minutes</label><input id="um" type="number" inputmode="decimal" step="any" min="0" max="59.999" placeholder="0"></div>
+          <div><label for="us">Seconds</label><input id="us" type="number" inputmode="decimal" step="any" min="0" max="59.999" placeholder="0"></div>
+        </div>
+        <div class="f" id="uh"><label for="hu">Staff reading at upper vane (m)</label><input id="hu" type="number" inputmode="decimal" step="any"></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Lower vane</legend>
+        <div class="f">
+          <label for="lt">Angle is a</label>
+          <select id="lt"><option value="el">Angle of elevation</option><option value="de">Angle of depression</option><option value="ze">Zenith angle</option></select>
+        </div>
+        <div class="row r3 f">
+          <div><label for="ld">Degrees</label><input id="ld" type="number" inputmode="decimal" step="any" min="0" placeholder="0"></div>
+          <div><label for="lm">Minutes</label><input id="lm" type="number" inputmode="decimal" step="any" min="0" max="59.999" placeholder="0"></div>
+          <div><label for="ls">Seconds</label><input id="ls" type="number" inputmode="decimal" step="any" min="0" max="59.999" placeholder="0"></div>
+        </div>
+        <div class="f"><label for="hl" id="hll">Staff reading at lower vane (m)</label><input id="hl" type="number" inputmode="decimal" step="any"></div>
+      </fieldset>
+
+      <div class="f" id="sp" hidden>
+        <label for="sv">Vane separation, s (m)</label>
+        <input id="sv" type="number" inputmode="decimal" step="any" min="0">
+        <p class="hint">The reading at the lower vane is needed only for the RL of the staff point.</p>
+      </div>
+
+      <details>
+        <summary>Levels (optional)</summary>
+        <div class="row r2">
+          <div><label for="rl">Station RL (m)</label><input id="rl" type="number" inputmode="decimal" step="any"></div>
+          <div><label for="hi">Height of instrument (m)</label><input id="hi" type="number" inputmode="decimal" step="any" min="0"></div>
+        </div>
+      </details>
+    </section>
+
+    <section class="card" aria-labelledby="out-h">
+      <h2 id="out-h">Result</h2>
+      <svg id="dia" viewBox="0 0 340 240" role="img" aria-label="Diagram of the two sights to the vanes"></svg>
+      <p class="status" id="status" role="status"></p>
+      <ul class="out" id="out"></ul>
+      <div class="btns">
+        <button class="btn p" id="add" type="button" disabled>Add to log</button>
+        <button class="btn" id="reset" type="button">Clear inputs</button>
+      </div>
+    </section>
+  </div>
+
+  <section class="card" style="margin-top:16px" aria-labelledby="log-h">
+    <h2 id="log-h">Field log</h2>
+    <p class="hint" id="logempty">Readings you add appear here. Copy them as CSV to paste into a spreadsheet.</p>
+    <div class="tw" id="tw" hidden>
+      <table><thead><tr><th>Point</th><th>Upper angle</th><th>Lower angle</th><th>D (m)</th><th>V (m)</th><th>RL (m)</th></tr></thead><tbody id="rows"></tbody></table>
+    </div>
+    <div class="btns">
+      <button class="btn" id="copy" type="button" disabled>Copy as CSV</button>
+      <button class="btn" id="clr" type="button" disabled>Clear log</button>
+    </div>
+    <p class="hint" id="copied" role="status"></p>
+  </section>
+
+  <details class="f2">
+    <summary>Formulas used</summary>
+    <p>Angles are signed: elevation is positive, depression is negative, and a zenith angle z becomes 90° − z. θu is the angle to the upper vane and θl the angle to the lower vane, with the staff vertical and the vanes a distance s apart.</p>
+    <p><code>D = s / (tanθu − tanθl)</code> (horizontal distance)<br>
+    <code>Vl = D·tanθl</code> and <code>Vu = D·tanθu</code> (vertical components to each vane)<br>
+    <code>RL of staff point = station RL + HI + Vl − hl</code>, where hl is the staff reading at the lower vane.</p>
+    <p>With vane readings, s = hu − hl. This works for two elevations, two depressions, or one of each.</p>
+  </details>
+  <footer class="copyright">
+    <p>&copy; 2026 Mr. Yash Lohana. All rights reserved.</p>
+    <p>This code is licensed for use with proper acknowledgment of ownership.</p>
+  </footer>
+</main>
+
+<script>
+(function(){
+var $=function(i){return document.getElementById(i)};
+var mode=1, log=[], cur=null;
+
+function num(id){var v=$(id).value.trim();return v===''?NaN:parseFloat(v)}
+function fmt(x,d){return (Math.abs(x)<5e-10?0:x).toFixed(d===undefined?3:d)}
+function dms(a){
+  var s=a<0?'−':'', v=Math.abs(a), d=Math.floor(v), m=Math.floor((v-d)*60), sec=Math.round(((v-d)*60-m)*60);
+  if(sec===60){sec=0;m++} if(m===60){m=0;d++}
+  return s+d+'° '+m+'′ '+sec+'″';
+}
+
+function setMode(n){
+  mode=n;
+  $('m1').setAttribute('aria-pressed',n===1);
+  $('m2').setAttribute('aria-pressed',n===2);
+  $('uh').hidden=n!==1; $('sp').hidden=n!==2;
+  $('hll').textContent=n===1?'Staff reading at lower vane (m)':'Staff reading at lower vane (m), optional';
+  calc();
+}
+
+function ang(p,name){
+  var d=num(p+'d'),m=num(p+'m'),s=num(p+'s');
+  d=isNaN(d)?0:d; m=isNaN(m)?0:m; s=isNaN(s)?0:s;
+  if(d<0||m<0||s<0) return {err:'Angle values cannot be negative. Pick elevation or depression instead.'};
+  if(m>=60||s>=60) return {err:'Minutes and seconds must be less than 60.'};
+  var a=d+m/60+s/3600, t=$(p+'t').value;
+  if(t==='ze'){ if(a>180||Math.abs(a-90)<1e-9&&false) return {err:'A zenith angle cannot exceed 180°.'}; return {th:90-a}; }
+  if(a>=90) return {err:'The '+name+' vane angle must be less than 90°.'};
+  return {th:t==='de'?-a:a};
+}
+
+function calc(){
+  cur=null;
+  var U=ang('u','upper'), L=ang('l','lower');
+  if(U.err) return show(U.err);
+  if(L.err) return show(L.err);
+  var rad=Math.PI/180, tu=Math.tan(U.th*rad), tl=Math.tan(L.th*rad);
+  var hl=num('hl'), s;
+  if(mode===1){
+    var hu=num('hu');
+    if(isNaN(hu)||isNaN(hl)) return show('Enter the staff readings at both vanes.',tu,tl);
+    s=hu-hl;
+    if(!(s>0)) return show('The upper vane reading must be larger than the lower vane reading.',tu,tl);
+  }else{
+    s=num('sv');
+    if(isNaN(s)||s<=0) return show('Enter the vane separation.',tu,tl);
+  }
+  if(!(tu-tl>1e-9)) return show('The upper vane angle must be higher than the lower vane angle. Check elevation and depression.',tu,tl);
+  var D=s/(tu-tl), Vl=D*tl, Vu=D*tu;
+  var hi=num('hi'), rl=num('rl'), R=null;
+  if(!isNaN(hi)&&!isNaN(hl)&&!isNaN(rl)) R=rl+hi+Vl-hl;
+  cur={u:U.th,l:L.th,s:s,D:D,Vl:Vl,Vu:Vu,Lu:D/Math.cos(U.th*rad),Ll:D/Math.cos(L.th*rad),R:R,hasLv:!isNaN(hi)&&!isNaN(hl)};
+  render(cur,tu,tl);
+}
+
+function show(msg,tu,tl){
+  $('status').textContent=msg; $('out').innerHTML=''; $('add').disabled=true;
+  if(tu===undefined){
+    var U=ang('u','upper'),L=ang('l','lower'),r=Math.PI/180;
+    tu=U.err?0.2:Math.tan(U.th*r); tl=L.err?-0.1:Math.tan(L.th*r);
+  }
+  draw(tu,tl);
+}
+
+function row(label,val,unit,cls){
+  return '<li'+(cls?' class="'+cls+'"':'')+'><span>'+label+'</span><b>'+val+(unit?' <small>'+unit+'</small>':'')+'</b></li>';
+}
+function sg(x){return (x>0?'+':'')+fmt(x)}
+
+function render(r,tu,tl){
+  $('status').textContent='';
+  var h='';
+  h+=row('Horizontal distance, D',fmt(r.D),'m','main');
+  h+=row('Vertical component to lower vane, Vl',sg(r.Vl),'m','main');
+  h+=row('Vertical component to upper vane, Vu',sg(r.Vu),'m');
+  h+=row('Inclined distance to lower vane',fmt(r.Ll),'m');
+  h+=row('Inclined distance to upper vane',fmt(r.Lu),'m');
+  h+=row('Vane separation, s',fmt(r.s),'m');
+  if(r.R!==null) h+=row('RL of staff point',fmt(r.R),'m','main');
+  else h+='<li><span>Add the station RL, the height of instrument and the lower vane reading to see the RL of the staff point.</span></li>';
+  $('out').innerHTML=h; $('add').disabled=false;
+  draw(tu,tl);
+}
+
+function draw(tu,tl){
+  var Dv=230, x0=30, x1=x0+Dv, cl=function(t){return Math.max(-1.2,Math.min(1.2,t))};
+  var a=cl(tu)*Dv, b=cl(tl)*Dv;
+  var up=Math.max(0,a,b), dn=Math.min(0,a,b), ext=up-dn, k=ext>170?170/ext:1;
+  a*=k; b*=k; up*=k; dn*=k;
+  var y0=120+(up+dn)/2, yu=y0-a, yl=y0-b, p=[];
+  var top=Math.min(yu,yl)-14, bot=Math.max(yu,yl)+14;
+  p.push('<line class="hz" x1="'+x0+'" y1="'+y0+'" x2="'+x1+'" y2="'+y0+'"/>');
+  p.push('<line class="staff" x1="'+x1+'" y1="'+top+'" x2="'+x1+'" y2="'+bot+'"/>');
+  p.push('<line class="sight" x1="'+x0+'" y1="'+y0+'" x2="'+x1+'" y2="'+yu+'"/>');
+  p.push('<line class="sight" x1="'+x0+'" y1="'+y0+'" x2="'+x1+'" y2="'+yl+'"/>');
+  p.push('<line class="vane" x1="'+(x1-12)+'" y1="'+yu+'" x2="'+(x1+12)+'" y2="'+yu+'"/>');
+  p.push('<line class="vane" x1="'+(x1-12)+'" y1="'+yl+'" x2="'+(x1+12)+'" y2="'+yl+'"/>');
+  p.push('<circle class="inst" cx="'+x0+'" cy="'+y0+'" r="5"/>');
+  p.push('<path d="M'+x0+' '+y0+' l-9 16 M'+x0+' '+y0+' l9 16" fill="none" style="stroke:var(--ink);stroke-width:2"/>');
+  var uy=Math.min(yu,yl)===yu, ly=!uy;
+  p.push('<text x="'+(x1+16)+'" y="'+(yu+4)+'">upper</text>');
+  p.push('<text x="'+(x1+16)+'" y="'+(yl+(Math.abs(yu-yl)<14?18:4))+'">lower</text>');
+  p.push('<text x="'+((x0+x1)/2)+'" y="'+(y0+(Math.max(yu,yl)>y0+6?-8:18))+'" text-anchor="middle">D</text>');
+  $('dia').innerHTML=p.join('');
+}
+
+function addLog(){
+  if(!cur) return;
+  log.push({p:'P'+(log.length+1),u:cur.u,l:cur.l,D:cur.D,V:cur.Vl,R:cur.R});
+  drawLog();
+}
+function drawLog(){
+  var has=log.length>0;
+  $('tw').hidden=!has; $('logempty').hidden=has; $('copy').disabled=!has; $('clr').disabled=!has;
+  $('rows').innerHTML=log.map(function(e){
+    return '<tr><td>'+e.p+'</td><td>'+dms(e.u)+'</td><td>'+dms(e.l)+'</td><td>'+fmt(e.D)+'</td><td>'+fmt(e.V)+'</td><td>'+(e.R===null?'–':fmt(e.R))+'</td></tr>';
+  }).join('');
+}
+function copyCsv(){
+  var csv='Point,Upper angle (deg),Lower angle (deg),D (m),V to lower vane (m),RL (m)\n'+log.map(function(e){
+    return [e.p,fmt(e.u,5),fmt(e.l,5),fmt(e.D),fmt(e.V),e.R===null?'':fmt(e.R)].join(',');
+  }).join('\n');
+  var done=function(ok){$('copied').textContent=ok?'Copied to the clipboard.':'Copy failed. Select the table and copy it by hand.'};
+  try{
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(csv).then(function(){done(true)},function(){done(false)});return}
+  }catch(e){}
+  try{
+    var ta=document.createElement('textarea');ta.value=csv;document.body.appendChild(ta);ta.select();
+    var ok=document.execCommand('copy');document.body.removeChild(ta);done(ok);
+  }catch(e){done(false)}
+}
+
+['ut','ud','um','us','hu','lt','ld','lm','ls','hl','sv','hi','rl'].forEach(function(id){
+  $(id).addEventListener('input',calc); $(id).addEventListener('change',calc);
+});
+$('m1').onclick=function(){setMode(1)};
+$('m2').onclick=function(){setMode(2)};
+$('add').onclick=addLog;
+$('copy').onclick=copyCsv;
+$('clr').onclick=function(){log=[];$('copied').textContent='';drawLog()};
+$('reset').onclick=function(){
+  ['ud','um','us','ld','lm','ls','hu','hl','sv'].forEach(function(id){$(id).value=''});
+  calc();
+};
+drawLog(); setMode(1);
+})();
+</script>
+</body>
+</html>
