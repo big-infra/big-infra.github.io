@@ -1,7 +1,11 @@
 ---
 layout: default
 title: Payments
+permalink: /payments/
 ---
+
+# Payments
+
 We provide multiple options for the client to make their payment.
 In case, their exists an arrangement with the intended user where they shall handle the payment on your behalf. Such an arrangement must be confirmed by us.
 
