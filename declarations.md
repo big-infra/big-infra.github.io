@@ -1,7 +1,10 @@
 ---
 layout: default
 title: Declarations
+permalink: /declarations/
 ---
+
+# Declarations
 
 # General Terms of Service
 1. We shall provide service to every client including Organisations and Individuals acording to their needs and requirements with the proper rights, affiliations and onsent as needed while adibing with the rules, laws and standards of service as stated and recommended by the relevant bodies, authorities of Government of India and International Standards.
