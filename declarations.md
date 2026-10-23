@@ -5,7 +5,7 @@ permalink: /declarations/
 ---
 
 <div class="hero">
-  <span class="tag">Policies & Terms</span>
+  <span class="tag">Policies &amp; Terms</span>
   <h1>Declarations</h1>
   <p>We maintain clear operational standards, privacy controls and payment policies to ensure fair, transparent and professional service delivery.</p>
 </div>
