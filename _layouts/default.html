@@ -62,18 +62,15 @@ footer p {
 <h2>Big Infrastructures</h2>
 
 <nav>
-<a href="/">Home</a>
-<a href="services">Services</a>
-<a href="payments">Payments</a>
-<a href="/admin">Login</a>
-<a href="declarations">Declarations</a>
+<a href="{{ '/' | relative_url }}">Home</a>
+<a href="{{ '/services/' | relative_url }}">Services</a>
+<a href="{{ '/payments/' | relative_url }}">Payments</a>
+<a href="{{ '/admin' | relative_url }}">Login</a>
+<a href="{{ '/declarations' | relative_url }}">Declarations</a>
 </nav>
 </header>
 
 {{ content }}
-
-  {{ content }}
-
 
 <footer class="copyright">
   <p>&copy; 2026 Mr. Yash Lohana. All rights reserved.</p>
