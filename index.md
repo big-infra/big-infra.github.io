@@ -22,20 +22,6 @@ Senior Legal Consultant and Service Provider | Notary Govt. of India
 
 ---
 
-## Collaborations:
-
-**Elite Walls, Construction and Renovations**<br/>
-- Mr. Sanket Nayak (Developer)
-- Mr. Omkar Mali (Contractor)
-
-**Advisors**<br/>
-- Mr. Pandurang Yadav (Director, Mahila Merchant, Karad)<br/>
-- Mr. Lalasaheb Jagtap (Consultant)<br/>
-- Mr. Laxman Shinde (Developer)<br/>
-- Adv. Kanhaiya Lohana (Lawyer)<br/>
-
----
-
 ## Corporate Social Responsibility
 **Present**<br/>
 Providing our E-Commerce & OfficeInfrastructure to Karad City Chess Association (KCCA)<br/>
