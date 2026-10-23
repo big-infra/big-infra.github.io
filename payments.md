@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Payments
+title: Big Infrastructures™ | Payments
 permalink: /payments/
 ---
 

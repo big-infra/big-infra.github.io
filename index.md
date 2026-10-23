@@ -1,6 +1,6 @@
 ---
 layout: default
-title: BIG INFRASTRUCTURES™ | Home
+title: Big Infrastructures™ | Home
 ---
 
 <div class="hero">

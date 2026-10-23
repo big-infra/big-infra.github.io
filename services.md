@@ -1,6 +1,6 @@
 ---
 layout: default
-title: BIG INFRASTRUCTURES™ | Services
+title: Big Infrastructures™ | Services
 permalink: /services/
 ---
 

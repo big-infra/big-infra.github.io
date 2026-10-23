@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Declarations
+title: Big Infrastructures™ | Declarations
 permalink: /declarations/
 ---
 
