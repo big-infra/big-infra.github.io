@@ -40,12 +40,15 @@ We conduct survey and measurements, and provide complete live tracable datasets.
 
 Tools
 
+GPS Survey Tools
 [**GPS Distance, Angle, and Area Calculator**](https://big-infra.github.io/services/gps-survey-tool.html)
 
+Theodolite Survey
 [**Inclined Stadia Calculator**](https://big-infra.github.io/services/inclined-stadia-calculator.html)
 
 [**Tangential Tacheometry Calculator**](https://big-infra.github.io/services/tangential-tacheometry-calculator.html)
 
+Plane Table Survey
 [**Resection Calculator - Three Point Problem**](https://big-infra.github.io/services/resection-calculator-tpp.html)
 
 ## Project Management
