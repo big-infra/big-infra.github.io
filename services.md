@@ -34,10 +34,20 @@ permalink: /services/
   <section class="card">
     <h3>Survey</h3>
     <p>We conduct survey and measurements and provide complete, traceable datasets for project and asset-related work.</p>
+
+    <h4>Satellite Mapping</h4>
     <ul>
       <li><a href="https://big-infra.github.io/services/gps-survey-tool.html">GPS Distance, Angle, and Area Calculator</a></li>
+    </ul>
+
+    <h4>Theodolite Survey</h4>
+    <ul>
       <li><a href="https://big-infra.github.io/services/inclined-stadia-calculator.html">Inclined Stadia Calculator</a></li>
       <li><a href="https://big-infra.github.io/services/tangential-tacheometry-calculator.html">Tangential Tacheometry Calculator</a></li>
+    </ul>
+
+    <h4>Plane Table Survey</h4>
+    <ul>
       <li><a href="https://big-infra.github.io/services/resection-calculator-tpp.html">Resection Calculator - Three Point Problem</a></li>
     </ul>
   </section>
