@@ -1,12 +1,13 @@
 ---
 layout: default
 title: BIG INFRASTRUCTURES™ | Services
+permalink: /services/
 ---
 
 # Services
 
 General
-Please note that reports cannot be disclosed here to public. For any such information, concerned party should communicate with us directly. Such requests shall not be accepted by anyone other than the concerned client and intend
+Please note that reports cannot be disclosed here to public. For any such information, concerned party should communicate with us directly. Such requests shall not be accepted by anyone other than ...
 
 Any other party wishes to procure any such report, then the following is mandatory
 Compliances
@@ -54,9 +55,3 @@ Plane Table Survey
 [**Resection Calculator - Three Point Problem**](https://big-infra.github.io/services/resection-calculator-tpp.html)
 
 ## Project Management
-
-
-
-
-
-
