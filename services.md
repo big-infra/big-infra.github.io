@@ -4,55 +4,59 @@ title: BIG INFRASTRUCTURES™ | Services
 permalink: /services/
 ---
 
-# Services
+<div class="hero">
+  <span class="tag">Professional Services</span>
+  <h1>Services</h1>
+  <p>We provide infrastructure valuation, advisory, project support, technical analysis and surveying services with a focus on professional compliance, quality and transparent process.</p>
+</div>
 
-General
-Please note that reports cannot be disclosed here to public. For any such information, concerned party should communicate with us directly. Such requests shall not be accepted by anyone other than ...
+<div class="muted-box">
+  <h3>General</h3>
+  <p>Please note that reports cannot be disclosed publicly. For any such information, the concerned party should communicate with us directly. Such requests shall not be accepted by anyone other than the authorised parties.</p>
+  <p>Any other party wishing to procure a report must comply with the following:</p>
+  <ul>
+    <li>Consent of the client, intended user and valuer is mandatory.</li>
+    <li>Purpose of the request must be provided.</li>
+    <li>Request fee must be paid.</li>
+    <li>A Non-Disclosure Agreement must be signed.</li>
+  </ul>
+</div>
 
-Any other party wishes to procure any such report, then the following is mandatory
-Compliances
-Concent of Client, Intended User and Valuer is mandatory
+<hr class="rule">
 
-Purpose of such request must be provided
+<div class="grid three-col">
+  <section class="card">
+    <h3>Immovable Property Valuation</h3>
+    <p>Professional support for valuation and assessment of property assets using standard methods and documented fee structures.</p>
+    <a class="button-link primary" href="https://big-infra.github.io/services/Valuation-Fees.html">Professional Fees for Valuation</a>
+  </section>
 
-Request Fee must be paid
+  <section class="card">
+    <h3>Survey</h3>
+    <p>We conduct survey and measurements and provide complete, traceable datasets for project and asset-related work.</p>
+    <ul>
+      <li><a href="https://big-infra.github.io/services/gps-survey-tool.html">GPS Distance, Angle, and Area Calculator</a></li>
+      <li><a href="https://big-infra.github.io/services/inclined-stadia-calculator.html">Inclined Stadia Calculator</a></li>
+      <li><a href="https://big-infra.github.io/services/tangential-tacheometry-calculator.html">Tangential Tacheometry Calculator</a></li>
+      <li><a href="https://big-infra.github.io/services/resection-calculator-tpp.html">Resection Calculator - Three Point Problem</a></li>
+    </ul>
+  </section>
 
-A Non-Disclouser Agreement must be signed to ensure the privacy is respected
+  <section class="card">
+    <h3>Project Management</h3>
+    <p>Technical coordination, planning and execution support for project progress, documentation and reporting.</p>
+    <p>Project management services are available on request.</p>
+  </section>
+</div>
 
-Charges and Fullfillment of Such Services
-The request Fee for Valuation Report is ₹2000/-.
+<hr class="rule">
 
-Softcopy (unsigned) shall be shared by mail
-
-If Hardcopy is required, client must collect it in person
-
-This service is of Prepaid Nature only
-
-
-## Immovable Property Valuation
-
-
-[**Professional Fees for Valuation**](https://big-infra.github.io/services/Valuation-Fees.html)
-
-
-## Survey
-
-We conduct survey and measurements, and provide complete live tracable datasets.
-
-**Tools**
-
-GPS Survey Tools
-
-[**GPS Distance, Angle, and Area Calculator**](https://big-infra.github.io/services/gps-survey-tool.html)
-
-Theodolite Survey
-
-[**Inclined Stadia Calculator**](https://big-infra.github.io/services/inclined-stadia-calculator.html)
-
-[**Tangential Tacheometry Calculator**](https://big-infra.github.io/services/tangential-tacheometry-calculator.html)
-
-Plane Table Survey
-
-[**Resection Calculator - Three Point Problem**](https://big-infra.github.io/services/resection-calculator-tpp.html)
-
-## Project Management
+<section class="card">
+  <h2>Charges and Fulfilment</h2>
+  <p>The request fee for valuation report is <strong>₹2000/-</strong>.</p>
+  <ul>
+    <li>Softcopy (unsigned) shall be shared by email.</li>
+    <li>If hardcopy is required, the client must collect it in person.</li>
+    <li>This service is of prepaid nature only.</li>
+  </ul>
+</section>

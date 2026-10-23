@@ -4,23 +4,45 @@ title: Payments
 permalink: /payments/
 ---
 
-# Payments
+<div class="hero">
+  <span class="tag">Secure Payment</span>
+  <h1>Payments</h1>
+  <p>We provide multiple options for the client to make payment. Where there is a prior arrangement with the intended user, payment may be handled on the client’s behalf, subject to confirmation by us.</p>
+</div>
 
-We provide multiple options for the client to make their payment.
-In case, their exists an arrangement with the intended user where they shall handle the payment on your behalf. Such an arrangement must be confirmed by us.
+<div class="grid three-col">
+  <section class="card">
+    <h3>Online Payment</h3>
+    <ul>
+      <li><a href="https://razorpay.me/@biginfra">Razorpay Payment Gateway</a></li>
+      <li><a href="https://paypal.me/biginfra">PayPal Payment Gateway</a></li>
+      <li>UPI at G-Pay Business VPA: <strong>8856947318-1@okbizaxis</strong></li>
+    </ul>
+  </section>
 
-You can directly pay us by various options
-1. [Razorpay Payment Gateway](https://razorpay.me/@biginfra)
-2. [PayPal payment Gateway](https://paypal.me/biginfra)
-3. UPI at G-Pay Business VPA: ![8856947318-1@okbizaxis](images/BIG-PayBizQR.jpeg)
+  <section class="card">
+    <h3>Bank Transfer</h3>
+    <ul>
+      <li>Account Holder: <strong>Mr. Yash Kanhaiya Lohana</strong></li>
+      <li>Account No.: <strong>34001675346</strong></li>
+      <li>Bank: <strong>State Bank of India</strong></li>
+      <li>Branch: <strong>Karad Treasury</strong></li>
+      <li>IFSC: <strong>SBIN0004648</strong></li>
+    </ul>
+  </section>
 
-5. Bank Account Transfer:
--    Acccount Holder: Mr. Yash Kanhaiya Lohana
--    Account No. 34001675346
--    Bank: State Bank of India
--    Branch: Karad Treasury
--    IFSC: SBIN0004648
-6. In-person Cash Payment
-7. Link based payment (provided by us on request)
+  <section class="card">
+    <h3>Other Modes</h3>
+    <ul>
+      <li>In-person cash payment</li>
+      <li>Link-based payment on request</li>
+    </ul>
+  </section>
+</div>
 
-Ensure to keep the record of Invoice and Receipts of the transactions
+<hr class="rule">
+
+<section class="card">
+  <h2>Important Note</h2>
+  <p>Please keep a record of your invoice and payment receipt for all transactions. This helps ensure proper documentation and smooth follow-up for services rendered.</p>
+</section>
