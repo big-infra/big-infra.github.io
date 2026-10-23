@@ -23,6 +23,19 @@ header{
   border-bottom:1px solid #ddd;
   margin-bottom:20px;
 }
+
+footer {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid #ddd;
+  text-align: center;
+  color: #555;
+  font-size: 0.92em;
+}
+
+footer p {
+  margin: 6px 0;
+}
 </style>
 
   <link rel="icon" href="{{ 'images/Icon.png' | relative_url }}" type="image/x-icon">
@@ -45,6 +58,11 @@ header{
 </header>
 
 {{ content }}
+
+<footer class="copyright">
+  <p>&copy; 2026 Mr. Yash Lohana. All rights reserved.</p>
+  <p>This code is licensed for use with proper acknowledgment of ownership.</p>
+</footer>
 
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 
