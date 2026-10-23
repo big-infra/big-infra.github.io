@@ -7,11 +7,7 @@ title: Big Infrastructures™ | Home
   <span class="tag">Karad, India</span>
   <h1>BIG INFRASTRUCTURES™</h1>
   <p>Consultancy of Architecture, Civil Engineering, Project Management, Information Technology and Legal Services in Karad, India.</p>
-  <div class="cta-row">
-    <a class="btn btn-primary" href="{{ '/services/' | relative_url }}">Explore Services</a>
-    <a class="button-link secondary" href="{{ '/payments/' | relative_url }}">Payment Options</a>
   </div>
-</div>
 
 <div class="grid two-col">
   <section class="card">
