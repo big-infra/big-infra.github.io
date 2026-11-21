@@ -36,9 +36,7 @@ permalink: /services/
     <p>We conduct survey and measurements and provide complete, traceable datasets for project and asset-related work.</p>
 
     <h4>Satellite Mapping</h4>
-    <ul>
-      <li><a href="https://big-infra.github.io/services/gps-survey-tool.html">GPS Distance, Angle, and Area Calculator</a></li>
-    </ul>
+    <ul><li><a href="https://big-infra.github.io/services/gps-survey-tool.html">GPS Distance, Angle, and Area Calculator</a></li></ul>
 
     <h4>Theodolite Survey</h4>
     <ul>
@@ -47,9 +45,7 @@ permalink: /services/
     </ul>
 
     <h4>Plane Table Survey</h4>
-    <ul>
-      <li><a href="https://big-infra.github.io/services/resection-calculator-tpp.html">Resection Calculator - Three Point Problem</a></li>
-    </ul>
+    <ul><li><a href="https://big-infra.github.io/services/resection-calculator-tpp.html">Resection Calculator - Three Point Problem</a></li></ul>
   </section>
 
   <section class="card">
@@ -62,7 +58,15 @@ permalink: /services/
 <hr class="rule">
 
 <section class="card">
-  <h2>Charges and Fulfilment</h2>
+  <h2>Valuation Research</h2>
+  <p>Research tools developed for economic value analysis, required return benchmarking and capital-intensity assessment.</p>
+  <a class="button-link primary" href="/services/economic-value-calculator.html">Economic Value Calculator</a>
+</section>
+
+<hr class="rule">
+
+<section class="card">
+  <h2>Charges and Fulfillment</h2>
   <p>The request fee for valuation report is <strong>₹2000/-</strong>.</p>
   <ul>
     <li>Softcopy (unsigned) shall be shared by email.</li>
