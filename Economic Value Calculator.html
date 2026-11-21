@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Economic Value Calculator</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light;--bg:#fff;--fg:#1d2433;--mut:#5b6577;--card:#f4f6fa;--bd:#d5dbe6;--ac:#2f5496;--ac2:#c0392b;--ok:#1e7e4f}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#14181f;--fg:#e8ecf3;--mut:#9aa5b8;--card:#1c222c;--bd:#323b4a;--ac:#7fa6ee;--ac2:#ff8a7a;--ok:#5cd394}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#14181f;--fg:#e8ecf3;--mut:#9aa5b8;--card:#1c222c;--bd:#323b4a;--ac:#7fa6ee;--ac2:#ff8a7a;--ok:#5cd394}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+main{max-width:1100px;margin:0 auto;padding:16px}
+h1{font-size:1.4rem;margin:.2em 0}h2{font-size:1.05rem;margin:.2em 0 .5em}
+.sub{color:var(--mut);margin:0 0 14px}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:14px}
+label{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:5px 0;font-size:.9rem}
+input{width:105px;padding:5px 7px;border:1px solid var(--bd);border-radius:6px;background:var(--bg);color:var(--fg);font:inherit}
+table{border-collapse:collapse;width:100%;font-size:.88rem}td,th{padding:5px 6px;border-bottom:1px solid var(--bd);text-align:right}
+td:first-child,th:first-child{text-align:left}th{color:var(--mut);font-weight:600}
+.wrap{overflow-x:auto}.k{color:var(--mut)}.big{font-size:1.15rem;font-weight:700}
+.pill{display:inline-block;padding:2px 9px;border-radius:99px;font-weight:600;font-size:.85rem;background:var(--bd)}
+.bad{color:var(--ac2)}.good{color:var(--ok)}
+canvas{max-height:300px}.note{font-size:.84rem;color:var(--mut)}
+</style></head><body><main>
+<h1>Economic Value Calculator</h1>
+<p class="sub">Required premium ρ, benchmark r<sub>E</sub><sup>r</sup>, loss Δr<sup>r</sup>, capital intensity CI and economic value E. Per-sqm values; rates in %.</p>
+<div class="grid">
+<section class="card"><h2>Inputs</h2>
+<label>Safe rate r<sub>fd</sub> (nominal) <input id="rfd" type="number" step="0.1" value="7"></label>
+<label>Inflation i <input id="i" type="number" step="0.1" value="6"></label>
+<label>Required premium ρ <input id="rho" type="number" step="0.1" value="6"></label>
+<label>Land value L (₹/sqm) <input id="L" type="number" step="100" value="60000"></label>
+<label>Building value D (₹/sqm) <input id="D" type="number" step="100" value="0"></label>
+<label>Net rent Y (₹/sqm/yr) <input id="Y" type="number" step="10" value="300"></label>
+<label>Land growth g <input id="g" type="number" step="0.1" value="8"></label>
+<label>Depreciation d <input id="d" type="number" step="0.1" value="1"></label>
+<label>r<sub>p</sub> override (blank = computed) <input id="rp" type="number" step="0.1" placeholder="auto"></label>
+<label>Plot ρ up to <input id="rmax" type="number" step="1" value="10"></label>
+<p class="note">M = L + D and r<sub>p</sub> = (Y + gL − dD)/(L + D). Defaults: the Karad plot (₹1,50,000 rent on 500 sqm).</p></section>
+<section class="card"><h2>Results</h2><div id="res" class="wrap"></div></section>
+</div>
+<div class="grid" style="margin-top:14px">
+<section class="card"><h2>CI vs ρ — linear</h2><canvas id="c1"></canvas></section>
+<section class="card"><h2>E vs ρ — hyperbola</h2><canvas id="c2"></canvas></section>
+<section class="card"><h2>Δr<sup>r</sup> vs ρ — linear</h2><canvas id="c3"></canvas></section>
+<section class="card"><h2>E vs r<sub>p</sub> — linear</h2><canvas id="c4"></canvas></section>
+</div>
+<section class="card" style="margin-top:14px"><h2>Benchmark scenarios</h2><div id="scen" class="wrap"></div>
+<p class="note">ρ = i is a calibration (FD rate plus a premium equal to inflation), not something inflation implies; support it with regional data. E assumes the real return flow Q = M·r<sub>p</sub><sup>r</sup> is held fixed, and CI and E need r<sub>p</sub><sup>r</sup> &gt; 0 and r<sub>E</sub><sup>r</sup> &gt; 0.</p></section>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+const $=id=>document.getElementById(id),charts={};
+const P=x=>isFinite(x)?(x*100).toFixed(3)+'%':'—',N=x=>isFinite(x)?Math.round(x).toLocaleString('en-IN'):'—',F=x=>isFinite(x)?x.toFixed(2):'—';
+function inp(){const g=k=>parseFloat($(k).value)||0,o=$('rp').value;return{rfd:g('rfd')/100,i:g('i')/100,rho:g('rho')/100,L:g('L'),D:g('D'),Y:g('Y'),g:g('g')/100,d:g('d')/100,ov:o===''?null:parseFloat(o)/100,rmax:Math.max(1,g('rmax'))/100}}
+function calc(p,rho){const M=p.L+p.D,rp=p.ov!==null?p.ov:(M?(p.Y+p.g*p.L-p.d*p.D)/M:0),rpr=(rp-p.i)/(1+p.i),rfr=(p.rfd-p.i)/(1+p.i),rrp=rp-p.rfd,rreq=p.rfd+rho,rE=(rreq-p.i)/(1+p.i),dr=rE-rpr,ok=rpr>0&&rE>0;
+return{M,rp,rpr,rfr,rrp,rrpr:(rrp-p.i)/(1+p.i),rreq,rE,rrE:(rho-p.i)/(1+p.i),dr,CI:ok?rE/rpr:NaN,E:ok?M*rpr/rE:NaN,rhoS:rrp}}
+function row(a,b){return`<tr><td class="k">${a}</td><td>${b}</td></tr>`}
+function show(){const p=inp(),c=calc(p,p.rho);
+const st=!isFinite(c.CI)?'CI/E not defined (needs r<sub>p</sub><sup>r</sup>&gt;0, r<sub>E</sub><sup>r</sup>&gt;0)':Math.abs(c.dr)<1e-9?'Equilibrium':c.dr>0?'<span class="bad">Over-capitalised (loss)</span>':'<span class="good">Under-capitalised (surplus)</span>';
+$('res').innerHTML='<table>'+row('Market value M (₹/sqm)',N(c.M))+row('r<sub>p</sub> (nominal)',P(c.rp))+row('r<sub>p</sub><sup>r</sup> (real)',P(c.rpr))+row('r<sub>fd</sub><sup>r</sup> (real safe rate)',P(c.rfr))+row('r<sub>rp</sub> = r<sub>p</sub> − r<sub>fd</sub>',P(c.rrp))+row('r<sub>rp</sub><sup>r</sup> (Fisher form)',P(c.rrpr))+row('Required return r<sub>req</sub> = r<sub>fd</sub> + ρ',P(c.rreq))+row('Benchmark r<sub>E</sub><sup>r</sup>',P(c.rE))+row('Loss Δr<sup>r</sup> = r<sub>E</sub><sup>r</sup> − r<sub>p</sub><sup>r</sup>',P(c.dr))+row('CI = M/E',F(c.CI))+row('<b class="big">E (₹/sqm)</b>','<b class="big">'+N(c.E)+'</b>')+row('Unsupported share 1 − E/M',isFinite(c.E)?P(Math.max(0,1-c.E/c.M)):'—')+row('Break-even premium ρ* = r<sub>p</sub> − r<sub>fd</sub>',P(c.rhoS))+row('Identity check r<sub>rp</sub><sup>r</sup> + r<sub>fd</sub><sup>r</sup> + i/(1+i) − r<sub>p</sub><sup>r</sup>',(c.rrpr+c.rfr+p.i/(1+p.i)-c.rpr).toExponential(1))+row('State','<span class="pill">'+st+'</span>')+'</table>';
+const rows=[['ρ = 0 (floor)',0],['ρ* (equilibrium)',c.rhoS],['ρ = i',p.i],['Current ρ',p.rho]];
+$('scen').innerHTML='<table><tr><th>Scenario</th><th>ρ</th><th>r<sub>E</sub><sup>r</sup></th><th>Δr<sup>r</sup></th><th>CI</th><th>E (₹/sqm)</th></tr>'+rows.map(([n,r])=>{const s=calc(p,r);return`<tr><td>${n}</td><td>${P(r)}</td><td>${P(s.rE)}</td><td>${P(s.dr)}</td><td>${F(s.CI)}</td><td>${N(s.E)}</td></tr>`}).join('')+'</table>';
+plots(p,c)}
+function curve(f,x0,x1,n){const a=[];for(let k=0;k<=n;k++){const x=x0+(x1-x0)*k/n,y=f(x);if(isFinite(y))a.push({x:x*100,y})}return a}
+function draw(id,xl,yl,line,pts,ymax){const s=getComputedStyle(document.documentElement),fg=s.getPropertyValue('--fg'),bd=s.getPropertyValue('--bd'),ac=s.getPropertyValue('--ac').trim(),a2=s.getPropertyValue('--ac2').trim();
+if(charts[id])charts[id].destroy();
+const sc={ticks:{color:fg},grid:{color:bd}};
+charts[id]=new Chart($(id),{type:'scatter',data:{datasets:[{data:line,showLine:true,borderColor:ac,pointRadius:0,borderWidth:2},...pts.map(([l,x,y,col])=>({label:l,data:[{x:x*100,y}],backgroundColor:col||a2,pointRadius:6}))]},
+options:{animation:false,maintainAspectRatio:true,aspectRatio:1.5,plugins:{legend:{labels:{color:fg,filter:i=>i.text}}},scales:{x:{...sc,title:{display:true,text:xl,color:fg}},y:{...sc,max:ymax,title:{display:true,text:yl,color:fg}}}}})}
+function plots(p,c){if(typeof Chart==='undefined')return;const rs=Math.max(p.rmax,c.rhoS*1.2,0.01),f=r=>calc(p,r),pt=(l,r,k,col)=>[l,r,f(r)[k],col];
+draw('c1','ρ (%)','CI = M/E',curve(r=>f(r).CI,0,rs,120),[pt('floor ρ=0',0,'CI','#888'),pt('equilibrium ρ*',c.rhoS,'CI','#2e9e5b'),pt('current',p.rho,'CI')].filter(a=>isFinite(a[2])));
+draw('c2','ρ (%)','E (₹/sqm)',curve(r=>f(r).E,0,rs,160),[pt('floor ρ=0',0,'E','#888'),pt('equilibrium ρ*',c.rhoS,'E','#2e9e5b'),pt('current',p.rho,'E')].filter(a=>isFinite(a[2])),c.M*4);
+draw('c3','ρ (%)','Δr^r (%)',curve(r=>f(r).dr*100,0,rs,2),[['equilibrium ρ*',c.rhoS,0,'#2e9e5b'],['current',p.rho,c.dr*100]]);
+const r0=p.i,r1=Math.max(c.rp,c.rreq)*1.5+0.01,E=r=>isFinite(c.E)||c.rE>0?c.M*((r-p.i)/(1+p.i))/c.rE:NaN;
+draw('c4','r_p (%)','E (₹/sqm)',curve(r=>c.rE>0&&r>p.i?E(r):NaN,r0,r1,2),[['equilibrium r_p = r_req',c.rreq,c.M,'#2e9e5b'],['current',c.rp,E(c.rp)]].filter(a=>isFinite(a[2])))}
+document.querySelectorAll('input').forEach(e=>e.addEventListener('input',show));
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',show);
+window.addEventListener('load',show);show();
+</script></body></html>
