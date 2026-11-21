@@ -45,7 +45,7 @@
         <label>Plot ρ up to <input id="rmax" type="number" step="1" value="10"></label>
         <p class="note">M = L + D and r<sub>p</sub> = (Y + gL − dD)/(L + D). Defaults: the Karad plot (₹1,50,000 rent on 500 sqm).</p>
       </section>
-      <section class="card"><h2>Results</h2><div id="res" class="wrap"></div></section>
+      <section class="card"><h2>Results</h2><div id="res" class="wrap" aria-live="polite"></div></section>
     </div>
     <div class="grid" style="margin-top:14px">
       <section class="card"><h2>CI vs ρ — linear</h2><canvas id="c1"></canvas></section>
@@ -63,16 +63,64 @@
   </footer>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
   <script>
-const $=id=>document.getElementById(id),charts={};
-const P=x=>isFinite(x)?(x*100).toFixed(3)+'%':'—',N=x=>isFinite(x)?Math.round(x).toLocaleString('en-IN'):'—',F=x=>isFinite(x)?x.toFixed(2):'—';
-function inp(){const g=k=>parseFloat($(k).value)||0,o=$('rp').value;return{rfd:g('rfd')/100,i:g('i')/100,rho:g('rho')/100,L:g('L'),D:g('D'),Y:g('Y'),g:g('g')/100,d:g('d')/100,ov:o===''?null:parseFloat(o)/100,rmax:Math.max(1,g('rmax'))/100}}
-function calc(p,rho){const M=p.L+p.D,rp=p.ov!==null?p.ov:(M?(p.Y+p.g*p.L-p.d*p.D)/M:0),rpr=(rp-p.i)/(1+p.i),rfr=(p.rfd-p.i)/(1+p.i),rrp=rp-p.rfd,rreq=p.rfd+rho,rE=(rreq-p.i)/(1+p.i),dr=rE-rpr,ok=rpr>0&&rE>0;return{M,rp,rpr,rfr,rrp:rrp,rreq,rE: rE,rEpr:(rho-p.i)/(1+p.i),dr,CI:ok?rE/rpr:NaN,E:ok?M*rpr/rE:NaN,rhoS:rpr>0?(rp-p.rfd-rpr*p.i)/(1+p.i):NaN}} 
-function row(a,b){return`<tr><td class="k">${a}</td><td>${b}</td></tr>`}
-function show(){const p=inp(),c=calc(p,p.rho);const st=!isFinite(c.CI)?'CI/E not defined (needs r<sub>p</sub><sup>r</sup>&gt;0, r<sub>E</sub><sup>r</sup>&gt;0)':Math.abs(c.dr)<1e-9?'Equilibrium':c.dr>0?' <span class="bad">Over-capitalised (loss)</span>':' <span class="good">Under-capitalised (surplus)</span>'; $('res').innerHTML='<table>'+row('Market value M (₹/sqm)',N(c.M))+row('r<sub>p</sub> (nominal)',P(c.rp))+row('r<sub>p</sub><sup>r</sup> (real)',P(c.rpr))+row('r<sub>fd</sub><sup>r</sup> (real safe rate)',P(c.rfr))+row('r<sub>p</sub> − r<sub>fd</sub>',P(c.rrp))+row('Required return r<sub>req</sub> = r<sub>fd</sub> + ρ',P(c.rreq))+row('Benchmark r<sub>E</sub><sup>r</sup>',P(c.rE))+row('Loss Δr<sup>r</sup> = r<sub>E</sub><sup>r</sup> − r<sub>p</sub><sup>r</sup>',P(c.dr))+row('CI = M/E',F(c.CI))+row('<b class="big">E (₹/sqm)</b>','<b class="big">'+N(c.E)+'</b>')+row('Unsupported share 1 − E/M',isFinite(c.E)?P(Math.max(0,1-c.E/c.M)):'—')+row('Break-even premium ρ* = r<sub>p</sub> − r<sub>fd</sub>',P(c.rhoS))+row('State','<span class="pill">'+st+'</span>'+'</table>';const rows=[['ρ = 0 (floor)',0],['ρ* (equilibrium)',c.rhoS],['ρ = i',p.i],['Current ρ',p.rho]];$('scen').innerHTML='<table><tr><th>Scenario</th><th>ρ</th><th>r<sub>E</sub><sup>r</sup></th><th>Δr<sup>r</sup></th><th>CI</th><th>E (₹/sqm)</th></tr>'+rows.map(([n,r])=>{const s=calc(p,r);return`<tr><td>${n}</td><td>${P(r)}</td><td>${P(s.rE)}</td><td>${P(s.dr)}</td><td>${F(s.CI)}</td><td>${N(s.E)}</td></tr>`}).join('')+'</table>';plots(p,c)}
-function curve(f,x0,x1,n){const a=[];for(let k=0;k<=n;k++){const x=x0+(x1-x0)*k/n,y=f(x);if(isFinite(y))a.push({x:x*100,y})}return a}
-function draw(id,xl,yl,line,pts,ymax){const s=getComputedStyle(document.documentElement),fg=s.getPropertyValue('--fg'),bd=s.getPropertyValue('--bd'),ac=s.getPropertyValue('--ac').trim(),a2=s.getPropertyValue('--ac2').trim();if(charts[id])charts[id].destroy();const sc={ticks:{color:fg},grid:{color:bd}};charts[id]=new Chart($(id),{type:'scatter',data:{datasets:[{data:line,showLine:true,borderColor:ac,pointRadius:0,borderWidth:2},...pts.map(([l,x,y,col])=>({label:l,data:[{x:x*100,y}],backgroundColor:col||a2,pointRadius:6}))]},options:{animation:false,maintainAspectRatio:true,aspectRatio:1.5,plugins:{legend:{labels:{color:fg,filter:i=>i.text}}},scales:{x:{...sc,title:{display:true,text:xl,color:fg}},y:{...sc,max:ymax,title:{display:true,text:yl,color:fg}}}}})}
-function plots(p,c){if(typeof Chart==='undefined')return;const rs=Math.max(p.rmax,c.rhoS*1.2,0.01),f=r=>calc(p,r),pt=(l,r,k,col)=>[l,r,f(r)[k],col];draw('c1','ρ (%)','CI = M/E',curve(r=>f(r).CI,0,rs,120),[pt('floor ρ=0',0,'CI','#888'),pt('equilibrium ρ*',c.rhoS,'CI','#2e9e5b'),pt('current',p.rho,'CI')].filter(a=>isFinite(a[2])));draw('c2','ρ (%)','E (₹/sqm)',curve(r=>f(r).E,0,rs,160),[pt('floor ρ=0',0,'E','#888'),pt('equilibrium ρ*',c.rhoS,'E','#2e9e5b'),pt('current',p.rho,'E')].filter(a=>isFinite(a[2])),c.M*4);draw('c3','ρ (%)','Δr^r (%)',curve(r=>f(r).dr*100,0,rs,120),[['equilibrium ρ*',c.rhoS,0,'#2e9e5b'],['current',p.rho,c.dr*100]]);const r0=p.i,r1=Math.max(c.rp,c.rreq)*1.5+0.01,E=r=>c.rE>0&&isFinite(c.M)?c.M*((r-p.i)/(1+p.i))/c.rE:NaN;draw('c4','r_p (%)','E (₹/sqm)',curve(r=>c.rE>0&&r>p.i?E(r):NaN,r0,r1,120),[['equilibrium r_p = r_req',c.rreq,c.M,'#2e9e5b'],['current',c.rp,E(c.rp)]].filter(a=>isFinite(a[2])))}
-document.querySelectorAll('input').forEach(e=>e.addEventListener('input',show));matchMedia('(prefers-color-scheme: dark)').addEventListener('change',show);window.addEventListener('load',show);show();
+'use strict';
+const $=id=>document.getElementById(id);
+const charts={};
+const pct=x=>Number.isFinite(x)?(x*100).toFixed(3)+'%':'—';
+const money=x=>Number.isFinite(x)?Math.round(x).toLocaleString('en-IN'):'—';
+const num=x=>Number.isFinite(x)?x.toFixed(2):'—';
+function inputs(){
+  const val=id=>{const n=parseFloat($(id).value);return Number.isFinite(n)?n:0};
+  const override=$('rp').value.trim();
+  return {rfd:val('rfd')/100,i:val('i')/100,rho:val('rho')/100,L:val('L'),D:val('D'),Y:val('Y'),g:val('g')/100,d:val('d')/100,rpOverride:override===''?null:parseFloat(override)/100,rmax:Math.max(0.1,val('rmax'))/100};
+}
+function calculate(p,rho){
+  const M=p.L+p.D;
+  const rp=p.rpOverride===null?(M?(p.Y+p.g*p.L-p.d*p.D)/M:0):p.rpOverride;
+  const rpr=(rp-p.i)/(1+p.i);
+  const rfr=(p.rfd-p.i)/(1+p.i);
+  const rreq=p.rfd+rho;
+  const rE=(rreq-p.i)/(1+p.i);
+  const dr=rE-rpr;
+  const valid=rpr>0&&rE>0;
+  return {M,rp,rpr,rfr,rreq,rE,dr,CI:valid?rE/rpr:NaN,E:valid?M*rpr/rE:NaN,rhoStar:rp-p.rfd};
+}
+function row(label,value){return `<tr><td class="k">${label}</td><td>${value}</td></tr>`;}
+function renderResults(p,c){
+  let state='';
+  if(!Number.isFinite(c.CI)) state='CI/E not defined (requires positive real returns)';
+  else if(Math.abs(c.dr)<1e-9) state='Equilibrium';
+  else state=c.dr>0?'<span class="bad">Over-capitalised (loss)</span>':'<span class="good">Under-capitalised (surplus)</span>';
+  $('res').innerHTML='<table>'+row('Market value M (₹/sqm)',money(c.M))+row('r<sub>p</sub> (nominal)',pct(c.rp))+row('r<sub>p</sub><sup>r</sup> (real)',pct(c.rpr))+row('r<sub>fd</sub><sup>r</sup> (real safe rate)',pct(c.rfr))+row('Required return r<sub>req</sub> = r<sub>fd</sub> + ρ',pct(c.rreq))+row('Benchmark r<sub>E</sub><sup>r</sup>',pct(c.rE))+row('Loss Δr<sup>r</sup> = r<sub>E</sub><sup>r</sup> − r<sub>p</sub><sup>r</sup>',pct(c.dr))+row('CI = M/E',num(c.CI))+row('<b class="big">E (₹/sqm)</b>','<b class="big">'+money(c.E)+'</b>')+row('Break-even premium ρ* = r<sub>p</sub> − r<sub>fd</sub>',pct(c.rhoStar))+row('State','<span class="pill">'+state+'</span>')+'</table>';
+}
+function renderScenarios(p,c){
+  const scenarios=[['ρ = 0 (floor)',0],['ρ* (equilibrium)',c.rhoStar],['ρ = i',p.i],['Current ρ',p.rho]];
+  $('scen').innerHTML='<table><tr><th>Scenario</th><th>ρ</th><th>r<sub>E</sub><sup>r</sup></th><th>Δr<sup>r</sup></th><th>CI</th><th>E (₹/sqm)</th></tr>'+scenarios.map(([name,rho])=>{const s=calculate(p,rho);return `<tr><td>${name}</td><td>${pct(rho)}</td><td>${pct(s.rE)}</td><td>${pct(s.dr)}</td><td>${num(s.CI)}</td><td>${money(s.E)}</td></tr>`}).join('')+'</table>';
+}
+function curve(fn,x0,x1,count){const points=[];for(let i=0;i<=count;i++){const x=x0+(x1-x0)*i/count,y=fn(x);if(Number.isFinite(y))points.push({x:x*100,y});}return points;}
+function makeChart(id,xTitle,yTitle,lineData,markers){
+  const canvas=$(id);
+  if(!canvas||typeof Chart==='undefined')return;
+  if(charts[id])charts[id].destroy();
+  const style=getComputedStyle(document.documentElement);
+  const fg=style.getPropertyValue('--fg').trim(),bd=style.getPropertyValue('--bd').trim(),accent=style.getPropertyValue('--ac').trim(),green=style.getPropertyValue('--ok').trim();
+  charts[id]=new Chart(canvas,{type:'scatter',data:{datasets:[{label:'Curve',data:lineData,showLine:true,borderColor:accent,backgroundColor:accent,pointRadius:0,borderWidth:2},...markers.filter(m=>Number.isFinite(m.y)).map(m=>({label:m.label,data:[{x:m.x*100,y:m.y}],backgroundColor:m.color||green,pointRadius:5}))]},options:{responsive:true,maintainAspectRatio:true,aspectRatio:1.5,animation:false,plugins:{legend:{labels:{color:fg}}},scales:{x:{type:'linear',ticks:{color:fg},grid:{color:bd},title:{display:true,text:xTitle,color:fg}},y:{ticks:{color:fg},grid:{color:bd},title:{display:true,text:yTitle,color:fg}}}}});
+}
+function renderCharts(p,c){
+  if(typeof Chart==='undefined')return;
+  const maxRho=Math.max(p.rmax,Number.isFinite(c.rhoStar)?c.rhoStar*1.2:0.01,0.01);
+  const at=rho=>calculate(p,rho);
+  makeChart('c1','ρ (%)','CI = M/E',curve(r=>at(r).CI,0,maxRho,120),[{label:'Break-even',x:c.rhoStar,y:at(c.rhoStar).CI},{label:'Current',x:p.rho,y:c.CI}]);
+  makeChart('c2','ρ (%)','E (₹/sqm)',curve(r=>at(r).E,0,maxRho,120),[{label:'Break-even',x:c.rhoStar,y:at(c.rhoStar).E},{label:'Current',x:p.rho,y:c.E}]);
+  makeChart('c3','ρ (%)','Δrʳ (%)',curve(r=>at(r).dr*100,0,maxRho,120),[{label:'Break-even',x:c.rhoStar,y:0},{label:'Current',x:p.rho,y:c.dr*100}]);
+  const lo=p.i,hi=Math.max(c.rp,c.rreq,lo+0.01)*1.5;
+  const eForRp=rp=>{const real=(rp-p.i)/(1+p.i);return real>0&&c.rE>0?c.M*real/c.rE:NaN;};
+  makeChart('c4','rₚ (%)','E (₹/sqm)',curve(eForRp,lo,hi,120),[{label:'Current',x:c.rp,y:eForRp(c.rp)},{label:'Break-even',x:c.rreq,y:eForRp(c.rreq)}]);
+}
+function update(){const p=inputs(),c=calculate(p,p.rho);renderResults(p,c);renderScenarios(p,c);renderCharts(p,c);}
+document.querySelectorAll('input').forEach(input=>input.addEventListener('input',update));
+window.addEventListener('load',update);
+update();
   </script>
 </body>
 </html>
