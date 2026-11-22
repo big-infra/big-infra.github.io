@@ -51,10 +51,10 @@
       <section class="card"><h2>CI vs ρ — linear</h2><canvas id="c1"></canvas></section>
       <section class="card"><h2>E vs ρ — hyperbola</h2><canvas id="c2"></canvas></section>
       <section class="card"><h2>Δr<sup>r</sup> vs ρ — linear</h2><canvas id="c3"></canvas></section>
-      <section class="card"><h2>E vs r<sub>p</sub> — linear</h2><canvas id="c4"></canvas></section>
+      <section class="card"><h2>E vs r<sub>p</sub> — linear (zero at r<sub>p</sub> = i)</h2><canvas id="c4"></canvas></section>
     </div>
     <section class="card" style="margin-top:14px"><h2>Benchmark scenarios</h2><div id="scen" class="wrap"></div>
-      <p class="note">ρ = i is a calibration (FD rate plus a premium equal to inflation), not something inflation implies; support it with regional data. E assumes the real return flow Q = M·r<sub>p</sub><sup>r</sup> is held fixed, and CI and E need r<sub>p</sub><sup>r</sup> &gt; 0 and r<sub>E</sub><sup>r</sup> &gt; 0.</p>
+      <p class="note">ρ = i is a calibration (FD rate plus a premium equal to inflation), not something inflation implies; support it with regional data. E assumes the real return flow Q = M·r<sub>p</sub><sup>r</sup> is held fixed. E is defined when r<sub>E</sub><sup>r</sup> &gt; 0 and is negative when r<sub>p</sub><sup>r</sup> &lt; 0 (the property erodes real value). CI is undefined at r<sub>p</sub><sup>r</sup> = 0, so E/M is the primary ratio.</p>
     </section>
   </main>
   <footer class="footer">
@@ -82,22 +82,24 @@ function calculate(p,rho){
   const rreq=p.rfd+rho;
   const rE=(rreq-p.i)/(1+p.i);
   const dr=rE-rpr;
-  const valid=rpr>0&&rE>0;
-  return {M,rp,rpr,rfr,rreq,rE,dr,CI:valid?rE/rpr:NaN,E:valid?M*rpr/rE:NaN,rhoStar:rp-p.rfd};
+  const posE=rE>0,zero=Math.abs(rpr)<1e-12;
+  return {M,rp,rpr,rfr,rreq,rE,dr,posE,zero,EM:posE?rpr/rE:NaN,CI:posE&&!zero?rE/rpr:NaN,E:posE?M*rpr/rE:NaN,rhoStar:rp-p.rfd};
 }
 function row(label,value){return `<tr><td class="k">${label}</td><td>${value}</td></tr>`;}
 function renderResults(p,c){
   let state='';
-  if(!Number.isFinite(c.CI)) state='CI/E not defined (requires positive real returns)';
+  if(!c.posE) state='Benchmark not positive: E not defined';
+  else if(c.zero) state='r<sub>p</sub><sup>r</sup> = 0: E = 0, CI undefined';
+  else if(c.rpr<0) state='<span class="bad">Value-destroying: E &lt; 0 (real return negative)</span>';
   else if(Math.abs(c.dr)<1e-9) state='Equilibrium';
   else state=c.dr>0?'<span class="bad">Over-capitalised (loss)</span>':'<span class="good">Under-capitalised (surplus)</span>';
-  $('res').innerHTML='<table>'+row('Market value M (₹/sqm)',money(c.M))+row('r<sub>p</sub> (nominal)',pct(c.rp))+row('r<sub>p</sub><sup>r</sup> (real)',pct(c.rpr))+row('r<sub>fd</sub><sup>r</sup> (real safe rate)',pct(c.rfr))+row('Required return r<sub>req</sub> = r<sub>fd</sub> + ρ',pct(c.rreq))+row('Benchmark r<sub>E</sub><sup>r</sup>',pct(c.rE))+row('Loss Δr<sup>r</sup> = r<sub>E</sub><sup>r</sup> − r<sub>p</sub><sup>r</sup>',pct(c.dr))+row('CI = M/E',num(c.CI))+row('<b class="big">E (₹/sqm)</b>','<b class="big">'+money(c.E)+'</b>')+row('Break-even premium ρ* = r<sub>p</sub> − r<sub>fd</sub>',pct(c.rhoStar))+row('State','<span class="pill">'+state+'</span>')+'</table>';
+  $('res').innerHTML='<table>'+row('Market value M (₹/sqm)',money(c.M))+row('r<sub>p</sub> (nominal)',pct(c.rp))+row('r<sub>p</sub><sup>r</sup> (real)',pct(c.rpr))+row('r<sub>fd</sub><sup>r</sup> (real safe rate)',pct(c.rfr))+row('Required return r<sub>req</sub> = r<sub>fd</sub> + ρ',pct(c.rreq))+row('Benchmark r<sub>E</sub><sup>r</sup>',pct(c.rE))+row('Loss Δr<sup>r</sup> = r<sub>E</sub><sup>r</sup> − r<sub>p</sub><sup>r</sup>',pct(c.dr))+row('CI = M/E (negative = not ranked)',num(c.CI))+row('E/M = r<sub>p</sub><sup>r</sup>/r<sub>E</sub><sup>r</sup> (performing share)',num(c.EM))+row('<b class="big">E (₹/sqm, signed)</b>','<b class="big">'+money(c.E)+'</b>')+row('Capital not supported M − E (₹/sqm)',money(c.M-c.E))+row('Unsupported share max(0, 1 − E/M); can exceed 100%',Number.isFinite(c.EM)?pct(Math.max(0,1-c.EM)):'—')+row('Break-even premium ρ* = r<sub>p</sub> − r<sub>fd</sub>',pct(c.rhoStar))+row('State','<span class="pill">'+state+'</span>')+'</table>';
 }
 function renderScenarios(p,c){
   const scenarios=[['ρ = 0 (floor)',0],['ρ* (equilibrium)',c.rhoStar],['ρ = i',p.i],['Current ρ',p.rho]];
-  $('scen').innerHTML='<table><tr><th>Scenario</th><th>ρ</th><th>r<sub>E</sub><sup>r</sup></th><th>Δr<sup>r</sup></th><th>CI</th><th>E (₹/sqm)</th></tr>'+scenarios.map(([name,rho])=>{const s=calculate(p,rho);return `<tr><td>${name}</td><td>${pct(rho)}</td><td>${pct(s.rE)}</td><td>${pct(s.dr)}</td><td>${num(s.CI)}</td><td>${money(s.E)}</td></tr>`}).join('')+'</table>';
+  $('scen').innerHTML='<table><tr><th>Scenario</th><th>ρ</th><th>r<sub>E</sub><sup>r</sup></th><th>Δr<sup>r</sup></th><th>CI</th><th>E/M</th><th>E (₹/sqm)</th></tr>'+scenarios.map(([name,rho])=>{const s=calculate(p,rho);return `<tr><td>${name}</td><td>${pct(rho)}</td><td>${pct(s.rE)}</td><td>${pct(s.dr)}</td><td>${num(s.CI)}</td><td>${num(s.EM)}</td><td>${money(s.E)}</td></tr>`}).join('')+'</table>';
 }
-function curve(fn,x0,x1,count){const points=[];for(let i=0;i<=count;i++){const x=x0+(x1-x0)*i/count,y=fn(x);if(Number.isFinite(y))points.push({x:x*100,y});}return points;}
+function curve(fn,x0,x1,count,cap){const points=[];for(let i=0;i<=count;i++){const x=x0+(x1-x0)*i/count,y=fn(x);if(Number.isFinite(y)&&(!cap||Math.abs(y)<=cap))points.push({x:x*100,y});}return points;}
 function makeChart(id,xTitle,yTitle,lineData,markers){
   const canvas=$(id);
   if(!canvas||typeof Chart==='undefined')return;
@@ -111,15 +113,16 @@ function renderCharts(p,c){
   const maxRho=Math.max(p.rmax,Number.isFinite(c.rhoStar)?c.rhoStar*1.2:0.01,0.01);
   const at=rho=>calculate(p,rho);
   makeChart('c1','ρ (%)','CI = M/E',curve(r=>at(r).CI,0,maxRho,120),[{label:'Break-even',x:c.rhoStar,y:at(c.rhoStar).CI},{label:'Current',x:p.rho,y:c.CI}]);
-  makeChart('c2','ρ (%)','E (₹/sqm)',curve(r=>at(r).E,0,maxRho,120),[{label:'Break-even',x:c.rhoStar,y:at(c.rhoStar).E},{label:'Current',x:p.rho,y:c.E}]);
+  makeChart('c2','ρ (%)','E (₹/sqm)',curve(r=>at(r).E,0,maxRho,120,5*Math.max(Math.abs(c.M),1)),[{label:'Break-even',x:c.rhoStar,y:at(c.rhoStar).E},{label:'Current',x:p.rho,y:c.E}]);
   makeChart('c3','ρ (%)','Δrʳ (%)',curve(r=>at(r).dr*100,0,maxRho,120),[{label:'Break-even',x:c.rhoStar,y:0},{label:'Current',x:p.rho,y:c.dr*100}]);
-  const lo=p.i,hi=Math.max(c.rp,c.rreq,lo+0.01)*1.5;
-  const eForRp=rp=>{const real=(rp-p.i)/(1+p.i);return real>0&&c.rE>0?c.M*real/c.rE:NaN;};
-  makeChart('c4','rₚ (%)','E (₹/sqm)',curve(eForRp,lo,hi,120),[{label:'Current',x:c.rp,y:eForRp(c.rp)},{label:'Break-even',x:c.rreq,y:eForRp(c.rreq)}]);
+  const hi=Math.max(c.rp,c.rreq,0.01)*1.5;
+  const eForRp=r=>c.rE>0?c.M*((r-p.i)/(1+p.i))/c.rE:NaN;
+  makeChart('c4','rₚ (%)','E (₹/sqm)',curve(eForRp,0,hi,120),[{label:'Current',x:c.rp,y:eForRp(c.rp)},{label:'Break-even',x:c.rreq,y:eForRp(c.rreq)},{label:'E = 0 at rₚ = i',x:p.i,y:0,color:'#888'}]);
 }
 function update(){const p=inputs(),c=calculate(p,p.rho);renderResults(p,c);renderScenarios(p,c);renderCharts(p,c);}
 document.querySelectorAll('input').forEach(input=>input.addEventListener('input',update));
 window.addEventListener('load',update);
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',update);
 update();
   </script>
 </body>
