@@ -16,7 +16,12 @@ permalink: /payments/
     <ul>
       <li><a href="https://razorpay.me/@biginfra">Razorpay Payment Gateway</a></li>
       <li><a href="https://paypal.me/biginfra">PayPal Payment Gateway</a></li>
-      <li>UPI at G-Pay Business VPA: <strong>8856947318-1@okbizaxis</strong></li>
+      <li>
+        UPI at G-Pay Business VPA: <strong>8856947318-1@okbizaxis</strong><br>
+        <a href="https://drive.google.com/file/d/1lSmw0rthuvNn9nC1GZ126ycE712J59tM/view?usp=sharing" target="_blank" rel="noopener noreferrer">
+          <img src="https://drive.google.com/uc?export=view&id=1lSmw0rthuvNn9nC1GZ126ycE712J59tM" alt="UPI payment image" style="max-width: 240px; height: auto; margin-top: 0.75rem;">
+        </a>
+      </li>
     </ul>
   </section>
 
